@@ -4,6 +4,8 @@ An interview-ready AI + multi-agent e-commerce project built from a clear produc
 
 中文名：云端多智能体智能电商系统
 
+Chinese readers: this README includes a Chinese project introduction near the end. A longer Chinese overview is also available in [docs/中文项目介绍.md](docs/中文项目介绍.md).
+
 ## For Students
 
 This repository is designed to be useful for undergraduate students who want a project that is bigger than a normal CRUD app, but still understandable enough to rebuild and explain in interviews.
@@ -156,3 +158,23 @@ Example response includes:
 ## Portfolio Summary
 
 Extended a coursework-based React e-commerce prototype into an AI-powered multi-agent fulfilment system with backend APIs, autonomous agent coordination, prediction modules and Docker-ready deployment.
+
+## 中文项目介绍
+
+这是一个面向 GitHub 展示、面试讲解和本科生学习参考的 AI + Multi-Agent 电商系统项目。
+
+项目的核心思路是：不从零开始造一个普通电商网站，而是把已有的课程作业基础继续工程化。原本的数据清洗和 React 电商前端，被扩展成一个包含后端 API、多智能体订单履约、需求预测、异常订单检测和 Docker 部署结构的完整项目。
+
+这个项目适合向面试官说明三件事：
+
+- 我能把课程作业升级成可运行、可展示、可继续迭代的工程项目。
+- 我理解前端、后端、数据处理、Agent 协作和 ML 推理接口之间的系统关系。
+- 我能围绕一个业务流程讲清楚技术选择，而不是只堆技术名词。
+
+这个项目也适合本科生参考：
+
+- 可以学习如何把 coursework 变成 portfolio project。
+- 可以参考 React + FastAPI + Agent workflow 的项目结构。
+- 可以 fork 后继续加入数据库、真实 MLP 模型、仪表盘、部署和演示截图。
+
+如果你正在准备 final-year project、GitHub portfolio 或软件工程 / AI 方向面试，这个仓库可以作为一个清晰的起点。欢迎 fork、学习、改造，也欢迎 star 支持。
