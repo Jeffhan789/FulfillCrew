@@ -4,6 +4,19 @@ An interview-ready AI + multi-agent e-commerce project built from a clear produc
 
 中文名：云端多智能体智能电商系统
 
+## For Students
+
+This repository is designed to be useful for undergraduate students who want a project that is bigger than a normal CRUD app, but still understandable enough to rebuild and explain in interviews.
+
+You can use it as:
+
+- a portfolio project template for AI, cloud and software engineering interviews
+- a reference structure for turning coursework into a serious GitHub project
+- a starting point for learning FastAPI, React, multi-agent workflows and ML inference APIs
+- a base project to fork, extend and compare against your own university modules
+
+If this helps you plan your own final-year project or interview portfolio, a star would be genuinely appreciated.
+
 ## Why This Project Exists
 
 Most beginner e-commerce projects stop at product cards and a shopping basket. This project goes further: after checkout, the order is handled by a multi-agent fulfilment workflow and enriched with AI-style prediction results.
@@ -24,6 +37,15 @@ The goal is not just to build another shop UI, but to show how a small coursewor
 - A simplified Contract Net Protocol for warehouse bidding
 - Demand prediction and fraud detection modules with stable inference interfaces
 - Docker-ready backend structure for future cloud deployment
+
+## Why It Is Star-Worthy
+
+This project is intentionally built as a learning bridge: simple enough for students to read, but structured enough to discuss with interviewers.
+
+- It connects frontend, backend, agents and ML in one coherent flow.
+- It shows how to upgrade coursework instead of abandoning it after submission.
+- It keeps the first version runnable, then leaves clear upgrade paths for stronger models and deployment.
+- It documents both the engineering structure and the thinking behind the project.
 
 ## Demo Flow
 
