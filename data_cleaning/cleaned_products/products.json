@@ -1,0 +1,43 @@
+[
+  {
+    "id": "p-1001",
+    "name": "Smart Watch Pro",
+    "price": 199,
+    "category": "electronics",
+    "type": "device",
+    "quantity": 12,
+    "rating": 4.5,
+    "image_link": "https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+  },
+  {
+    "id": "p-1002",
+    "name": "Wireless Noise Cancelling Headphones",
+    "price": 149.5,
+    "category": "electronics",
+    "type": "audio",
+    "quantity": 7,
+    "rating": 4.8,
+    "image_link": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+  },
+  {
+    "id": "p-1003",
+    "name": "Product p-1003",
+    "price": 9.99,
+    "category": "electronics",
+    "type": "device",
+    "quantity": 0,
+    "rating": 5,
+    "image_link": "https://source.unsplash.com/600x400/?product,p-1003"
+  },
+  {
+    "id": "p-1004",
+    "name": "Ergonomic Desk Lamp",
+    "price": 39.99,
+    "category": "home",
+    "type": "lighting",
+    "quantity": 22,
+    "rating": 4.2,
+    "image_link": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c"
+  }
+]
+
