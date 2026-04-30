@@ -5,7 +5,7 @@ from backend.agents.demand_prediction_agent import DemandPredictionAgent
 from backend.agents.fraud_detection_agent import FraudDetectionAgent
 from backend.agents.inventory_agent import InventoryAgent
 from backend.agents.order_agent import OrderAgent
-from backend.database.models import AgentDecision, OrderRequest, OrderResponse
+from backend.database.models import AgentDecision, ModelEvaluation, OrderRequest, OrderResponse
 from backend.services.product_service import ProductService
 
 
@@ -17,6 +17,44 @@ class OrderService:
         self.coordinator_agent = CoordinatorAgent()
         self.demand_agent = DemandPredictionAgent()
         self.fraud_agent = FraudDetectionAgent()
+
+    def _course_trace(self) -> list[AgentDecision]:
+        return [
+            AgentDecision(
+                agent="COMP315 Cloud Computing",
+                message="Frontend, FastAPI backend, API boundaries and Docker-ready structure show the cloud e-commerce engineering layer.",
+            ),
+            AgentDecision(
+                agent="COMP310 Multi-Agent Systems",
+                message="Order, Inventory, Coordinator and Warehouse agents cooperate through a simplified Contract Net Protocol.",
+            ),
+            AgentDecision(
+                agent="ELEC320 Neural Networks",
+                message="Demand and fraud modules expose training/online inference style interfaces that can be replaced by real MLP/SVM models.",
+            ),
+        ]
+
+    def _model_evaluations(self, risk_score: float, predicted_demand: int) -> list[ModelEvaluation]:
+        return [
+            ModelEvaluation(
+                model_name="Demand Prediction MLP Interface",
+                course_topic="MLP regression and generalisation",
+                metric="predicted_sales_next_7_days",
+                score=float(predicted_demand),
+                interpretation="Higher value suggests stronger near-term demand and possible restock pressure.",
+                training_mode="Historical product and sales features would be used to train regression weights.",
+                online_mode="The Demand Prediction Agent calls the model during checkout to estimate future demand.",
+            ),
+            ModelEvaluation(
+                model_name="Fraud Detection Classifier Interface",
+                course_topic="Binary classification with sigmoid-style risk output",
+                metric="risk_score",
+                score=risk_score,
+                interpretation="Scores above the threshold move the order into manual review.",
+                training_mode="Historical labelled orders would be split into normal and suspicious examples.",
+                online_mode="The Fraud Detection Agent scores each new order before inventory is reserved.",
+            ),
+        ]
 
     def create_order(self, request: OrderRequest) -> OrderResponse:
         products = self.product_service.get_product_map()
@@ -56,13 +94,19 @@ class OrderService:
                 restock_recommendation="restock required",
                 bids=[],
                 decision_log=decision_log,
+                course_trace=self._course_trace(),
+                model_evaluations=self._model_evaluations(risk_score, 0),
             )
 
         decision_log.append(self.inventory_agent.log("Stock checked: available."))
         bids, winner = self.coordinator_agent.request_bids(item_count)
         for bid in bids:
-            decision_log.append(self.coordinator_agent.log(f"{bid.warehouse_id} submitted bid {bid.bid}."))
-        decision_log.append(self.coordinator_agent.log(f"Selected {winner.warehouse_id}."))
+            decision_log.append(
+                self.coordinator_agent.log(
+                    f"{bid.warehouse_id} submitted bid {bid.bid} with suitability {bid.suitability_score}. {bid.reason}."
+                )
+            )
+        decision_log.append(self.coordinator_agent.log(f"Selected {winner.warehouse_id} using the lowest-bid policy."))
 
         predicted_demand = self.demand_agent.predict(selected_products)
         restock_recommendation = "restock recommended" if predicted_demand > sum(product.quantity for product in selected_products) else "no restock needed"
@@ -89,5 +133,6 @@ class OrderService:
             restock_recommendation=restock_recommendation,
             bids=bids,
             decision_log=decision_log,
+            course_trace=self._course_trace(),
+            model_evaluations=self._model_evaluations(risk_score, predicted_demand),
         )
-

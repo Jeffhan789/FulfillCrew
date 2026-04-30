@@ -17,4 +17,6 @@ def test_order_service_returns_agent_decisions():
     assert result.order_status in {"created", "review_required"}
     assert result.selected_warehouse is not None
     assert len(result.decision_log) >= 5
-
+    assert len(result.course_trace) == 3
+    assert len(result.model_evaluations) == 2
+    assert result.bids[0].reason

@@ -39,6 +39,7 @@ The goal is not just to build another shop UI, but to show how a small coursewor
 - A simplified Contract Net Protocol for warehouse bidding
 - Demand prediction and fraud detection modules with stable inference interfaces
 - Docker-ready backend structure for future cloud deployment
+- A course intelligence dashboard showing how COMP315, COMP310 and ELEC320 map into the running system
 
 ## Why It Is Star-Worthy
 
@@ -61,7 +62,7 @@ This project is intentionally built as a learning bridge: simple enough for stud
 8. Coordinator Agent asks Warehouse Agents for bids.
 9. The best warehouse is selected.
 10. Demand Prediction Agent estimates next 7-day demand.
-11. The frontend displays order status, selected warehouse, risk score, predicted demand and the full decision log.
+11. The frontend displays order status, selected warehouse, risk score, predicted demand, warehouse bids, model evidence and the full decision log.
 
 ## Agent Layer
 
@@ -71,7 +72,7 @@ The order workflow is intentionally modelled as a multi-agent system rather than
 - Fraud Detection Agent scores the order and decides whether review is required.
 - Inventory Agent checks stock and reserves inventory after approval.
 - Coordinator Agent announces the fulfilment task and selects the best warehouse bid.
-- Warehouse Agents bid using workload, stock level, distance and processing speed.
+- Warehouse Agents bid using workload, stock level, distance and processing speed, then return an explainable bid reason.
 - Demand Prediction Agent estimates future demand and provides restock guidance.
 
 ## AI Layer
@@ -145,7 +146,10 @@ Example response includes:
 - `risk_score`
 - `predicted_demand_next_7_days`
 - `restock_recommendation`
+- `bids`
 - `decision_log`
+- `course_trace`
+- `model_evaluations`
 
 ## Roadmap
 
@@ -157,7 +161,7 @@ Example response includes:
 
 ## Portfolio Summary
 
-Extended a coursework-based React e-commerce prototype into an AI-powered multi-agent fulfilment system with backend APIs, autonomous agent coordination, prediction modules and Docker-ready deployment.
+Extended a coursework-based React e-commerce prototype into an AI-powered multi-agent fulfilment system with backend APIs, autonomous agent coordination, explainable warehouse bidding, prediction modules, course mapping dashboards and Docker-ready deployment.
 
 ## 中文项目介绍
 
@@ -168,13 +172,13 @@ Extended a coursework-based React e-commerce prototype into an AI-powered multi-
 这个项目适合向面试官说明三件事：
 
 - 我能把课程作业升级成可运行、可展示、可继续迭代的工程项目。
-- 我理解前端、后端、数据处理、Agent 协作和 ML 推理接口之间的系统关系。
+- 我理解前端、后端、数据处理、Agent 协作、课程映射和 ML 推理接口之间的系统关系。
 - 我能围绕一个业务流程讲清楚技术选择，而不是只堆技术名词。
 
 这个项目也适合本科生参考：
 
 - 可以学习如何把 coursework 变成 portfolio project。
-- 可以参考 React + FastAPI + Agent workflow 的项目结构。
+- 可以参考 React + FastAPI + Agent workflow + course dashboard 的项目结构。
 - 可以 fork 后继续加入数据库、真实 MLP 模型、仪表盘、部署和演示截图。
 
 如果你正在准备 final-year project、GitHub portfolio 或软件工程 / AI 方向面试，这个仓库可以作为一个清晰的起点。欢迎 fork、学习、改造，也欢迎 star 支持。

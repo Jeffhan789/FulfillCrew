@@ -136,6 +136,80 @@ select {
   padding: 28px clamp(20px, 5vw, 72px);
 }
 
+.course-dashboard {
+  background: #ffffff;
+  border-bottom: 1px solid #d9ded8;
+  display: grid;
+  gap: 18px;
+  padding: 26px clamp(20px, 5vw, 72px);
+}
+
+.dashboard-heading {
+  display: grid;
+  gap: 6px;
+  max-width: 820px;
+}
+
+.dashboard-heading h2 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.course-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.course-card,
+.model-tile,
+.bid-board article,
+.model-evidence article {
+  background: #f7f9f4;
+  border: 1px solid #dce4dc;
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.course-card h3 {
+  font-size: 1rem;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.course-card p,
+.course-card li,
+.model-tile p,
+.bid-board p,
+.model-evidence p {
+  color: #4e5d56;
+  font-size: 0.9rem;
+  line-height: 1.42;
+  margin: 0;
+}
+
+.course-card ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.model-strip {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.model-tile span,
+.bid-board span,
+.model-evidence span {
+  color: #66766e;
+  font-size: 0.82rem;
+}
+
 .product-grid {
   display: grid;
   gap: 18px;
@@ -248,7 +322,7 @@ select {
   border-top: 1px solid #d9ded8;
   display: grid;
   gap: 20px;
-  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-columns: 260px minmax(0, 1fr);
   padding: 28px clamp(20px, 5vw, 72px) 56px;
 }
 
@@ -275,11 +349,32 @@ select {
   padding: 12px;
 }
 
+.bid-board,
+.model-evidence {
+  align-content: start;
+  display: grid;
+  gap: 10px;
+}
+
+.bid-board h2,
+.model-evidence h2 {
+  font-size: 1.05rem;
+}
+
+.course-trace {
+  grid-column: 2;
+}
+
 @media (max-width: 860px) {
   .top-band,
   .control-row,
   .workspace,
   .order-band {
+    grid-template-columns: 1fr;
+  }
+
+  .course-grid,
+  .model-strip {
     grid-template-columns: 1fr;
   }
 
@@ -292,5 +387,8 @@ select {
   .basket-panel {
     position: static;
   }
-}
 
+  .course-trace {
+    grid-column: auto;
+  }
+}

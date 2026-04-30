@@ -19,6 +19,34 @@ type BasketItem = {
   quantity: number;
 };
 
+type WarehouseBid = {
+  warehouse_id: string;
+  bid: number;
+  workload: number;
+  distance: number;
+  stock_level: number;
+  processing_speed: number;
+  suitability_score: number;
+  reason: string;
+};
+
+type CourseMapping = {
+  module: string;
+  concept: string;
+  implementation: string;
+  evidence: string[];
+};
+
+type ModelEvaluation = {
+  model_name: string;
+  course_topic: string;
+  metric: string;
+  score: number;
+  interpretation: string;
+  training_mode: string;
+  online_mode: string;
+};
+
 type OrderResponse = {
   order_id: string;
   order_status: string;
@@ -28,7 +56,10 @@ type OrderResponse = {
   fraud_status: string;
   predicted_demand_next_7_days: number;
   restock_recommendation: string;
+  bids: WarehouseBid[];
   decision_log: { agent: string; message: string }[];
+  course_trace: { agent: string; message: string }[];
+  model_evaluations: ModelEvaluation[];
 };
 
 const API_BASE = "http://127.0.0.1:8000";
@@ -40,12 +71,22 @@ function App() {
   const [sortBy, setSortBy] = useState<"name" | "price" | "rating">("rating");
   const [inStockOnly, setInStockOnly] = useState(true);
   const [order, setOrder] = useState<OrderResponse | null>(null);
+  const [courseMap, setCourseMap] = useState<CourseMapping[]>([]);
+  const [modelEvaluations, setModelEvaluations] = useState<ModelEvaluation[]>([]);
 
   useEffect(() => {
     fetch(`${API_BASE}/products`)
       .then((response) => response.json())
       .then(setProducts)
       .catch(() => setProducts([]));
+    fetch(`${API_BASE}/agents/course-map`)
+      .then((response) => response.json())
+      .then(setCourseMap)
+      .catch(() => setCourseMap([]));
+    fetch(`${API_BASE}/agents/model-evaluations`)
+      .then((response) => response.json())
+      .then(setModelEvaluations)
+      .catch(() => setModelEvaluations([]));
   }, []);
 
   const visibleProducts = useMemo(() => {
@@ -105,6 +146,7 @@ function App() {
         <div className="metric-strip">
           <span>{visibleProducts.length} results</span>
           <span>{basket.length} basket lines</span>
+          <span>{courseMap.length || 3} modules</span>
           <span>£{basketTotal.toFixed(2)}</span>
         </div>
       </section>
@@ -123,6 +165,36 @@ function App() {
           <input type="checkbox" checked={inStockOnly} onChange={(event: any) => setInStockOnly(event.target.checked)} />
           In stock
         </label>
+      </section>
+
+      <section className="course-dashboard">
+        <div className="dashboard-heading">
+          <p className="eyebrow">Course Intelligence Dashboard</p>
+          <h2>How the system maps university theory into a working checkout flow</h2>
+        </div>
+        <div className="course-grid">
+          {courseMap.map((item) => (
+            <article className="course-card" key={item.module}>
+              <p className="tag">{item.module}</p>
+              <h3>{item.concept}</h3>
+              <p>{item.implementation}</p>
+              <ul>
+                {item.evidence.map((evidence) => (
+                  <li key={evidence}>{evidence}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <div className="model-strip">
+          {modelEvaluations.map((model) => (
+            <article className="model-tile" key={model.model_name}>
+              <span>{model.course_topic}</span>
+              <strong>{model.model_name}</strong>
+              <p>{model.metric}: {model.score}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="workspace">
@@ -190,6 +262,34 @@ function App() {
           </div>
           <ol className="decision-log">
             {order.decision_log.map((entry, index) => (
+              <li key={`${entry.agent}-${index}`}>
+                <strong>{entry.agent}</strong>
+                <span>{entry.message}</span>
+              </li>
+            ))}
+          </ol>
+          <div className="bid-board">
+            <h2>Warehouse Bids</h2>
+            {order.bids.map((bid) => (
+              <article key={bid.warehouse_id}>
+                <strong>{bid.warehouse_id}</strong>
+                <span>Bid {bid.bid} / suitability {bid.suitability_score}</span>
+                <p>{bid.reason}</p>
+              </article>
+            ))}
+          </div>
+          <div className="model-evidence">
+            <h2>Model Evidence</h2>
+            {order.model_evaluations.map((model) => (
+              <article key={model.model_name}>
+                <strong>{model.model_name}</strong>
+                <span>{model.metric}: {model.score}</span>
+                <p>{model.interpretation}</p>
+              </article>
+            ))}
+          </div>
+          <ol className="decision-log course-trace">
+            {order.course_trace.map((entry, index) => (
               <li key={`${entry.agent}-${index}`}>
                 <strong>{entry.agent}</strong>
                 <span>{entry.message}</span>
