@@ -1,9 +1,21 @@
 # FulfillCrew（智仓通）
 
-> English first. 中文版见后文。
-> [English](#english) | [中文](#中文)
+[![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Docker](https://img.shields.io/badge/Docker-24+-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)](https://redis.io/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.5-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-2.1-EB622B?logo=xgboost)](https://xgboost.readthedocs.io/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](./LICENSE)
 
-<a name="english"></a>
+> English first. 中文版见后文。
+
+[English](#english) | [中文](#中文)
+
+## English
 
 > **Multi-Agent Order Fulfillment System**
 >
@@ -372,9 +384,7 @@ Extended a coursework-based React e-commerce prototype into an AI-powered multi-
 
 ---
 
-<a name="中文"></a>
-
-# 中文
+## 中文
 
 > **FulfillCrew（智仓通）**
 >

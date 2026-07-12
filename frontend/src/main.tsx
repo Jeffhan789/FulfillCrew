@@ -1,7 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { CheckCircle2, Minus, Plus, Search, ShoppingBasket } from "lucide-react";
+import { useOrderSocket } from "./hooks/useOrderSocket";
 import "./styles.css";
+
+// Dashboard components
+import WarehouseBidChart from "./components/WarehouseBidChart";
+import DemandPredictionChart from "./components/DemandPredictionChart";
+import RiskScoreGauge from "./components/RiskScoreGauge";
+import OrderStatusTimeline from "./components/OrderStatusTimeline";
+import SystemHealthPanel from "./components/SystemHealthPanel";
+import ModelEvaluationPanel from "./components/ModelEvaluationPanel";
 
 type Product = {
   id: string;
@@ -74,6 +83,7 @@ function App() {
   const [order, setOrder] = useState<OrderResponse | null>(null);
   const [courseMap, setCourseMap] = useState<CourseMapping[]>([]);
   const [modelEvaluations, setModelEvaluations] = useState<ModelEvaluation[]>([]);
+  const { status: wsStatus, connected } = useOrderSocket(order?.order_id || null);
 
   useEffect(() => {
     fetch(`${API_BASE}/products`)
@@ -187,15 +197,28 @@ function App() {
             </article>
           ))}
         </div>
-        <div className="model-strip">
-          {modelEvaluations.map((model) => (
-            <article className="model-tile" key={model.model_name}>
-              <span>{model.course_topic}</span>
-              <strong>{model.model_name}</strong>
-              <p>{model.metric}: {model.score}</p>
-            </article>
-          ))}
+
+        {/* Model Evaluation Panel — replaces the static model strip */}
+        <div className="dashboard-card" style={{ marginTop: 8 }}>
+          <h3>ML Model Evaluations</h3>
+          <ModelEvaluationPanel evaluations={modelEvaluations} />
         </div>
+      </section>
+
+      {/* System Health Panel — placed right after course dashboard */}
+      <section
+        style={{
+          background: "#ffffff",
+          borderBottom: "1px solid #d9ded8",
+          padding: "12px clamp(20px, 5vw, 72px)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+          <span className="eyebrow" style={{ fontWeight: 600, color: "#15201b" }}>
+            System Health
+          </span>
+        </div>
+        <SystemHealthPanel />
       </section>
 
       <section className="workspace">
@@ -253,6 +276,19 @@ function App() {
       </section>
 
       {order ? (
+        <section className="websocket-panel">
+          <div className="ws-status">
+            <span className={connected ? "connected" : "disconnected"}>
+              {connected ? "● Live" : "○ Offline"}
+            </span>
+            {wsStatus ? (
+              <span>Latest: {wsStatus.event} — {wsStatus.data?.fraud_status || wsStatus.data?.order_status || "..."}</span>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {order ? (
         <section className="order-band">
           <div className="order-summary">
             <h2>Order {order.order_status}</h2>
@@ -269,6 +305,33 @@ function App() {
               </li>
             ))}
           </ol>
+
+          {/* Dashboard Grid — new visualisation area */}
+          <div className="dashboard-grid" style={{ gridColumn: "1 / -1" }}>
+            <div className="dashboard-card">
+              <h3>Risk Score</h3>
+              <RiskScoreGauge
+                riskScore={order.risk_score}
+                fraudStatus={order.fraud_status}
+              />
+            </div>
+            <div className="dashboard-card">
+              <h3>Warehouse Bids</h3>
+              <WarehouseBidChart bids={order.bids} />
+            </div>
+            <div className="dashboard-card">
+              <h3>Demand Prediction</h3>
+              <DemandPredictionChart
+                predictedDemand={order.predicted_demand_next_7_days}
+                recommendation={order.restock_recommendation}
+              />
+            </div>
+            <div className="dashboard-card">
+              <h3>Decision Timeline</h3>
+              <OrderStatusTimeline logs={order.decision_log} />
+            </div>
+          </div>
+
           <div className="bid-board">
             <h2>Warehouse Bids</h2>
             {order.bids.map((bid) => (

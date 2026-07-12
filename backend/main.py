@@ -1,10 +1,27 @@
 import os
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.api import agents, orders, products
+from backend.api import agents, health, metrics, orders, products
+from backend.api import websocket as websocket_router
+from backend.database.engine import init_db
+from backend.infrastructure.logging import logger
 
-app = FastAPI(title="Cloud Multi-Agent E-Commerce Intelligence System")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("application_startup", event="startup")
+    await init_db()
+    yield
+    logger.info("application_shutdown", event="shutdown")
+
+
+app = FastAPI(
+    title="Cloud Multi-Agent E-Commerce Intelligence System",
+    lifespan=lifespan,
+)
 
 # CORS origins from environment, falling back to sensible defaults for local dev
 default_origins = [
@@ -32,8 +49,6 @@ app.add_middleware(
 app.include_router(products.router)
 app.include_router(orders.router)
 app.include_router(agents.router)
-
-
-@app.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok"}
+app.include_router(health.router)
+app.include_router(metrics.router)
+app.include_router(websocket_router.router)

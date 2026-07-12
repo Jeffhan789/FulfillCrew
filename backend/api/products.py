@@ -1,12 +1,11 @@
 from fastapi import APIRouter
-
-from backend.database.db import product_service
-from backend.database.models import Product
+from backend.schemas import Product
+from backend.services.product_service import ProductService
 
 router = APIRouter(prefix="/products", tags=["products"])
 
 
 @router.get("", response_model=list[Product])
-def list_products() -> list[Product]:
-    return product_service.list_products()
-
+async def list_products() -> list[Product]:
+    service = ProductService()
+    return await service.list_products()

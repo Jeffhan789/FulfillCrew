@@ -1,0 +1,27 @@
+{
+  "feature_columns": [
+    "order_total",
+    "number_of_items",
+    "average_item_price",
+    "is_new_user",
+    "account_age_days",
+    "shipping_distance",
+    "billing_shipping_match",
+    "order_hour",
+    "is_night_order",
+    "orders_in_last_hour"
+  ],
+  "n_samples": 5500,
+  "n_fraud": 55,
+  "n_normal": 5445,
+  "train_size": 4400,
+  "test_size": 1100,
+  "xgb_params": {
+    "max_depth": 5,
+    "learning_rate": 0.1,
+    "n_estimators": 200,
+    "scale_pos_weight": 99,
+    "random_state": 42,
+    "n_jobs": 4
+  }
+}

@@ -144,6 +144,72 @@ select {
   padding: 26px clamp(20px, 5vw, 72px);
 }
 
+.dashboard-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  padding: 20px 0;
+}
+
+.dashboard-card {
+  background: #ffffff;
+  border: 1px solid #d9ded8;
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 200px;
+}
+
+.dashboard-card h3 {
+  font-size: 1rem;
+  margin: 0 0 16px 0;
+  color: #15201b;
+}
+
+.risk-gauge {
+  text-align: center;
+}
+
+.risk-gauge .score {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.risk-gauge .score.low { color: #256d57; }
+.risk-gauge .score.medium { color: #c9a227; }
+.risk-gauge .score.high { color: #c44536; }
+
+.timeline-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #edf0eb;
+}
+
+.timeline-item:last-child { border-bottom: none; }
+
+.health-panel {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.health-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.health-indicator .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.health-indicator .dot.healthy { background: #256d57; }
+.health-indicator .dot.degraded { background: #c9a227; }
+.health-indicator .dot.unhealthy { background: #c44536; }
+
 .dashboard-heading {
   display: grid;
   gap: 6px;
@@ -365,6 +431,20 @@ select {
   grid-column: 2;
 }
 
+.websocket-panel {
+  background: #f0f4f0;
+  border-bottom: 1px solid #d9ded8;
+  padding: 12px clamp(20px, 5vw, 72px);
+}
+.ws-status {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 0.9rem;
+}
+.ws-status .connected { color: #256d57; }
+.ws-status .disconnected { color: #8a8a8a; }
+
 @media (max-width: 860px) {
   .top-band,
   .control-row,
@@ -386,6 +466,10 @@ select {
 
   .basket-panel {
     position: static;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
   }
 
   .course-trace {

@@ -1,12 +1,11 @@
 from fastapi import APIRouter
-
-from backend.database.models import CourseMapping, ModelEvaluation
+from backend.schemas import CourseMapping, ModelEvaluation
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 
 
 @router.get("")
-def list_agents() -> dict[str, list[str]]:
+async def list_agents() -> dict[str, list[str]]:
     return {
         "agents": [
             "Order Agent",
@@ -22,7 +21,7 @@ def list_agents() -> dict[str, list[str]]:
 
 
 @router.get("/course-map", response_model=list[CourseMapping])
-def course_map() -> list[CourseMapping]:
+async def course_map() -> list[CourseMapping]:
     return [
         CourseMapping(
             module="COMP315 Cloud Computing",
@@ -58,7 +57,7 @@ def course_map() -> list[CourseMapping]:
 
 
 @router.get("/model-evaluations", response_model=list[ModelEvaluation])
-def model_evaluations() -> list[ModelEvaluation]:
+async def model_evaluations() -> list[ModelEvaluation]:
     return [
         ModelEvaluation(
             model_name="Demand Prediction MLP Interface",

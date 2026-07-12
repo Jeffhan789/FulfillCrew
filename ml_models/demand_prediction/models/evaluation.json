@@ -1,0 +1,6 @@
+{
+  "mae": 3.8928,
+  "mape_percent": 11.7072,
+  "r2": 0.9865,
+  "n_test_samples": 400
+}

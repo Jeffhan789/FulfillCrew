@@ -1,4 +1,36 @@
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: fulfillcrew-postgres-dev
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fulfillcrew
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data-dev:/var/lib/postgresql/data
+    networks:
+      - fulfillcrew-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: fulfillcrew-redis-dev
+    ports:
+      - "6379:6379"
+    networks:
+      - fulfillcrew-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: .
@@ -10,11 +42,17 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1
       - LOG_LEVEL=debug
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/fulfillcrew
+      - REDIS_URL=redis://redis:6379/0
     volumes:
-      # Mount source code for hot reload during development
       - ./backend:/app/backend:ro
       - ./ml_models:/app/ml_models:ro
       - ./data_cleaning/cleaned_products:/app/data_cleaning/cleaned_products:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - fulfillcrew-network
     command: ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
@@ -32,6 +70,9 @@ services:
     networks:
       - fulfillcrew-network
     restart: unless-stopped
+
+volumes:
+  postgres-data-dev:
 
 networks:
   fulfillcrew-network:
