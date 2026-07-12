@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fulfillcrew-backend-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=debug
+    volumes:
+      # Mount source code for hot reload during development
+      - ./backend:/app/backend:ro
+      - ./ml_models:/app/ml_models:ro
+      - ./data_cleaning/cleaned_products:/app/data_cleaning/cleaned_products:ro
+    networks:
+      - fulfillcrew-network
+    command: ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fulfillcrew-frontend-dev
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - fulfillcrew-network
+    restart: unless-stopped
+
+networks:
+  fulfillcrew-network:
+    driver: bridge

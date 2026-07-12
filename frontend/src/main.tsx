@@ -62,7 +62,8 @@ type OrderResponse = {
   model_evaluations: ModelEvaluation[];
 };
 
-const API_BASE = "http://127.0.0.1:8000";
+// Use environment-aware API base; falls back to localhost for direct dev usage
+const API_BASE = (import.meta.env.VITE_API_BASE as string) || "";
 
 function App() {
   const [products, setProducts] = useState<Product[]>([]);

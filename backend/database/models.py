@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -19,7 +21,7 @@ class BasketItem(BaseModel):
 
 class OrderRequest(BaseModel):
     user_id: str = "guest"
-    items: list[BasketItem]
+    items: list[BasketItem] = Field(min_length=1)
     shipping_distance: float = Field(default=12.0, ge=0)
     is_new_user: bool = True
 
@@ -61,7 +63,7 @@ class OrderResponse(BaseModel):
     order_id: str
     order_status: str
     order_total: float
-    selected_warehouse: str | None
+    selected_warehouse: Optional[str] = None
     risk_score: float
     fraud_status: str
     predicted_demand_next_7_days: int
