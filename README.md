@@ -6,10 +6,6 @@
 
 中文名：多智能体订单履约系统
 
-An interview-ready AI + multi-agent e-commerce project built from a clear product idea: turn a simple coursework e-commerce prototype into a full order intelligence system.
-
-中文名：云端多智能体智能电商系统
-
 Chinese readers: this README includes a Chinese project introduction near the end. A longer Chinese overview is also available in [docs/中文项目介绍.md](docs/中文项目介绍.md).
 
 ## For Students
