@@ -1,4 +1,9 @@
-# 智仓通 FulfillCrew
+# FulfillCrew（智仓通）
+
+> English first. 中文版见后文。
+> [English](#english) | [中文](#中文)
+
+<a name="english"></a>
 
 > **Multi-Agent Order Fulfillment System**
 >
@@ -367,9 +372,11 @@ Extended a coursework-based React e-commerce prototype into an AI-powered multi-
 
 ---
 
-# FulfillCrew
+<a name="中文"></a>
 
-> **智仓通**
+# 中文
+
+> **FulfillCrew（智仓通）**
 >
 > 一个面向面试展示的 AI + 多智能体电商项目。核心理念：将一个简单的课程作业电商原型，工程化升级为一个完整的订单智能履约系统。
 
