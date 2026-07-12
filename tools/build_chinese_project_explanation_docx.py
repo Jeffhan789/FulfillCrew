@@ -10,7 +10,7 @@ from docx.shared import Cm, Pt, RGBColor
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_PATH = PROJECT_ROOT / "docs" / "云端多智能体智能电商系统_项目构建思路说明.docx"
+OUTPUT_PATH = PROJECT_ROOT / "docs" / "智仓通_项目构建思路说明.docx"
 
 
 def set_cell_shading(cell, fill):
@@ -140,7 +140,7 @@ def build_doc():
 
     title = doc.add_paragraph()
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = title.add_run("云端多智能体智能电商系统")
+    run = title.add_run("智仓通")
     set_run_font(run, size=24, bold=True, color=RGBColor(31, 78, 121), latin="Aptos Display")
 
     subtitle = doc.add_paragraph()

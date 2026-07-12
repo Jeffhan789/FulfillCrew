@@ -369,7 +369,7 @@ Extended a coursework-based React e-commerce prototype into an AI-powered multi-
 
 # FulfillCrew
 
-> **多智能体订单履约系统**
+> **智仓通**
 >
 > 一个面向面试展示的 AI + 多智能体电商项目。核心理念：将一个简单的课程作业电商原型，工程化升级为一个完整的订单智能履约系统。
 
