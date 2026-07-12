@@ -1,4 +1,10 @@
-# Cloud-Based Multi-Agent E-Commerce Intelligence System
+# FulfillCrew
+
+> **Multi-Agent Order Fulfillment System**
+>
+> An interview-ready AI + multi-agent e-commerce project built from a clear product idea: turn a simple coursework e-commerce prototype into a full order intelligence system.
+
+中文名：多智能体订单履约系统
 
 An interview-ready AI + multi-agent e-commerce project built from a clear product idea: turn a simple coursework e-commerce prototype into a full order intelligence system.
 
