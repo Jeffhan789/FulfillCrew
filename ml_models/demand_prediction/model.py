@@ -1,3 +1,44 @@
+"""PyTorch MLP for demand prediction (ELEC320 Neural Networks).
+
+Architecture: 2-layer Multi-Layer Perceptron (MLP) with ReLU activations
+and Dropout regularisation.
+
+Input Features (9-dimensional):
+    1. price              — Product unit price
+    2. rating             — Customer rating (1-5)
+    3. category_encoded   — One-hot or label-encoded category
+    4. type_encoded       — One-hot or label-encoded sub-type
+    5. day_of_week        — 0=Monday ... 6=Sunday
+    6. month              — 1=January ... 12=December
+    7. is_weekend         — Binary flag
+    8. sales_last_7_days  — Rolling window sales
+    9. sales_last_30_days — Longer rolling window sales
+
+Network Topology:
+    Input(9) → Linear(9→64) → ReLU → Dropout(0.2)
+             → Linear(64→32) → ReLU → Dropout(0.2)
+             → Linear(32→1)  → Output (scalar regression)
+
+Design Decisions:
+    - Dropout(0.2): Prevents overfitting by randomly zeroing 20% of neurons
+      during training. Disabled during inference (model.eval()).
+    - ReLU: Non-linear activation that avoids vanishing gradients
+      (unlike sigmoid/tanh in deep networks).
+    - squeeze(-1): Flattens the final (batch, 1) tensor to (batch,) for
+      compatibility with MSELoss.
+
+Interview Note:
+    Q: Why 64→32 instead of 128→64→32?
+    A: Demand prediction with 9 features is a relatively simple regression
+       problem. A deeper network would overfit on limited training data.
+       64→32 is a good balance between model capacity and generalisation.
+       
+    Q: What loss function and optimizer would you use?
+    A: MSELoss (Mean Squared Error) for regression. Adam optimizer with
+       learning rate 1e-3 and weight decay 1e-5 for regularisation.
+       See ml_models/demand_prediction/train.py for the full training loop.
+"""
+
 import torch
 import torch.nn as nn
 

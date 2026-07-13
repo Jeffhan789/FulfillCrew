@@ -1,4 +1,35 @@
-from pathlib import Path
+"""Health check endpoint for Kubernetes/Docker orchestration.
+
+This module implements the health check pattern required by cloud-native
+deployment platforms (Docker Compose, Kubernetes, AWS ECS, etc.).
+
+Health Check Levels:
+    - Liveness: Is the process running? (FastAPI handles this implicitly)
+    - Readiness: Is the app ready to accept traffic? (this endpoint)
+    - Startup: Has the app finished initialisation? (init_db in lifespan)
+
+Checks Performed:
+    1. database: Can we connect to PostgreSQL?
+    2. redis: Is the event bus backed by Redis?
+    3. demand_model: Does the PyTorch MLP file exist?
+    4. fraud_model: Does the XGBoost model file exist?
+
+Status Logic:
+    - "healthy": ALL checks pass → load balancer routes traffic here
+    - "degraded": ONE or more checks fail → trigger alert, but keep serving
+      (fallback to JSON products and heuristic models still works)
+
+Interview Note:
+    Q: What's the difference between /health and /ready in Kubernetes?
+    A: /health (liveness) tells K8s whether to restart the container.
+       /ready (readiness) tells K8s whether to route traffic to the pod.
+       We combine both here for simplicity.
+       
+    Q: Why check for file existence instead of loading the model?
+    A: Loading large models into memory on every health check would be
+       expensive and slow. File existence is a cheap proxy. In production
+       you'd also verify model checksums or version metadata.
+"""
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession

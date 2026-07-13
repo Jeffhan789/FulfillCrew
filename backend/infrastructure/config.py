@@ -2,7 +2,36 @@
 
 from __future__ import annotations
 
-import os
+"""Centralised configuration for FulfillCrew backend.
+
+Uses the 12-Factor App methodology: configuration is stored in environment
+variables, not code. This makes the app portable across dev/staging/prod
+environments without code changes.
+
+Design Pattern: Singleton + Immutable Dataclass
+    - @dataclass(frozen=True): Settings cannot be modified after creation
+    - Module-level `settings` instance: Global singleton accessible anywhere
+    - os.getenv() with defaults: Works out of the box in development
+
+Environment Variables:
+    DATABASE_URL      → PostgreSQL async connection string
+    REDIS_URL         → Redis pub/sub connection (optional)
+    BACKEND_LOG_LEVEL → structlog filter level
+    BACKEND_PORT      → HTTP server port
+    CORS_ORIGINS      → Comma-separated allowed origins
+
+Interview Note:
+    Q: Why frozen dataclass instead of a dict or global variables?
+    A: Immutable dataclasses prevent accidental mutation at runtime.
+       Type checkers (mypy, pyright) can verify usage. The property
+       accessor (cors_origins_list) provides derived values without
+       storing duplicate state.
+       
+    Q: How would you handle secrets like DB passwords?
+    A: Use Docker secrets, AWS Secrets Manager, or HashiCorp Vault.
+       Never commit secrets to Git. The .env.example file shows the
+       expected keys without real values.
+"""
 from dataclasses import dataclass
 
 

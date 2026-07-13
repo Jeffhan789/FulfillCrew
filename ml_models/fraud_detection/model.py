@@ -1,7 +1,38 @@
-"""Fraud detection model definitions.
+"""Fraud detection model definitions (ELEC320 Neural Networks).
 
-Contains the legacy LightweightFraudClassifier heuristic scorer and
-feature constants used by the XGBoost training pipeline.
+This module contains two scorers:
+1. LightweightFraudClassifier — heuristic logistic-style fallback (no ML training needed)
+2. FEATURE_COLUMNS — schema definition for the XGBoost training pipeline
+
+Mathematical Foundation:
+    The fallback uses a logistic function: p = 1 / (1 + e^(-logit))
+    where logit = w0 + w1*x1 + w2*x2 + ... + wn*xn
+    
+    This is essentially a single-layer neural network (perceptron) with
+    sigmoid activation — the simplest form of binary classification.
+
+XGBoost Integration (see predict.py):
+    When a trained model exists on disk (fraud_xgb.json), the system uses
+    XGBoost instead of this heuristic. XGBoost is a gradient-boosted ensemble
+    of decision trees, which typically outperforms logistic regression on
+    tabular data with non-linear interactions.
+
+SHAP Explainability (see predict.py):
+    SHAP (SHapley Additive exPlanations) decomposes the model prediction
+    into contributions from each feature. This answers "why was this order
+    flagged?" — critical for regulatory compliance and user trust.
+
+Interview Note:
+    Q: Why 0.65 as the threshold?
+    A: It balances precision (minimising false alarms) and recall (catching
+       real fraud). In practice, you'd tune this using a ROC curve and
+       considering the business cost of false positives vs false negatives.
+       
+    Q: How is XGBoost different from a neural network?
+    A: XGBoost builds an ensemble of decision trees sequentially, where each
+       tree corrects errors of the previous ones. It's excellent for tabular
+       data with mixed feature types. Neural networks learn distributed
+       representations and excel at unstructured data (images, text).
 """
 
 import math

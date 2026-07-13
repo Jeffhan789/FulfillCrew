@@ -1,4 +1,41 @@
-"""SQLAlchemy 2.0 async ORM models for PostgreSQL persistence."""
+"""SQLAlchemy 2.0 async ORM models for PostgreSQL persistence.
+
+Entity Relationship Diagram (ERD):
+    ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
+    │   Product   │◄──────│  OrderItem  │──────►│   Order     │
+    │   (products)│   1:M │ (order_items)│  M:1  │  (orders)   │
+    └─────────────┘       └─────────────┘       └──────┬──────┘
+                                                       │ 1:M
+                                                  ┌────┴────┐
+                                                  │         │
+                                           ┌──────▼────┐ ┌──▼──────────┐
+                                           │AgentDecision│ │WarehouseBid │
+                                           │(agent_decisions)│(warehouse_bids)│
+                                           └───────────┘ └─────────────┘
+
+Design Decisions:
+    - DeclarativeBase (SQLAlchemy 2.0): Type-safe, modern ORM approach
+    - Mapped[] with mapped_column(): Explicit typing, IDE autocomplete
+    - lazy="selectin": Eager loading for related collections without N+1
+    - cascade="all, delete-orphan": Deleting an order cascades to items/decisions/bids
+    - server_default=func.now(): Database-level timestamp generation (not Python)
+
+Interview Note:
+    Q: Why SQLAlchemy 2.0 instead of raw SQL or Django ORM?
+    A: SQLAlchemy 2.0 is the most flexible Python ORM. It supports async
+       (asyncpg), complex queries, and works with any framework. Django ORM
+       is tightly coupled to Django. Raw SQL is faster but harder to maintain.
+       
+    Q: What is the N+1 problem and how does selectin solve it?
+    A: N+1 = 1 query for parent + N queries for each child. selectinload
+       issues a single additional SELECT with IN clause to fetch all children
+       at once, reducing total queries to 2 regardless of collection size.
+       
+    Q: Why ondelete="CASCADE" on ForeignKey?
+    A: It ensures referential integrity at the database level. If an order is
+       deleted, PostgreSQL automatically deletes related items, decisions, and
+       bids. Without this, we'd have orphaned rows or constraint violations.
+"""
 from datetime import datetime, timezone
 from typing import List
 from sqlalchemy import String, Float, Integer, DateTime, JSON, Boolean, ForeignKey, func

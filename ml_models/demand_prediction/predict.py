@@ -1,8 +1,40 @@
-"""Inference entry point for the demand prediction model.
+"""Inference entry point for the demand prediction model (PyTorch MLP).
 
-Provides both single-product (`predict_demand`) and batch (`predict_batch`)
-prediction functions.  Falls back to a heuristic estimator when the trained
-PyTorch model is not yet available, preserving backward compatibility.
+This module demonstrates the complete ML inference pipeline:
+1. Feature encoding (raw product dict → 9-dim numpy vector)
+2. Model loading (lazy singleton pattern — load once, reuse many times)
+3. Forward pass (torch.no_grad() for inference efficiency)
+4. Post-processing (round, clamp to non-negative)
+
+Graceful Degradation:
+    If the trained .pt model is missing, the system falls back to a heuristic
+    function that mirrors the original LightweightDemandMLP logic. This ensures
+    the e-commerce system is functional even before any model training.
+
+Model Persistence:
+    - PyTorch state_dict format (.pt file) stores only learnable weights
+    - Load with map_location="cpu" to ensure GPU-trained models work on CPU-only hosts
+    - model.eval() disables Dropout and sets batch norm to inference mode
+
+Interview Note:
+    Q: Why use torch.no_grad() during inference?
+    A: It disables gradient computation, reducing memory usage and speeding up
+       forward passes. Gradients are only needed during backpropagation (training).
+       
+    Q: What is the lazy singleton pattern used here?
+    A: predict_demand._model is set on first successful call and reused for
+       all subsequent calls. This avoids reloading the model from disk on every
+       prediction, which would be I/O-bound and slow.
+       
+    Q: Why np.float32 instead of np.float64?
+    A: GPUs and neural networks typically use 32-bit floats. Using float64
+       would double memory usage without improving model accuracy for this task.
+       
+    Q: How would you improve prediction latency for high-traffic scenarios?
+    A: 1. Batch predictions (predict_batch) instead of one-by-one
+       2. ONNX export for optimised CPU inference
+       3. Redis caching for frequently requested products
+       4. GPU inference if latency is critical and batch size is large
 """
 
 import math

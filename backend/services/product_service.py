@@ -1,4 +1,33 @@
-import json
+"""Product Service — application service layer for product catalogue access.
+
+Implements the Circuit Breaker pattern implicitly: if the database is
+unreachable, it falls back to the JSON file from the data_cleaning pipeline.
+This ensures the system remains functional even during partial outages.
+
+Architecture Layers:
+    API (products.py) → Service (ProductService) → Repository (ProductRepository) → DB (PostgreSQL)
+                                    ↓
+                               Fallback (JSON file)
+
+Data Flow:
+    1. data_cleaning/ scripts clean raw product data → products.json
+    2. ProductService loads JSON as fallback catalogue
+    3. FastAPI startup (init_db) seeds PostgreSQL from JSON if tables are empty
+    4. Runtime reads prefer PostgreSQL, fall back to JSON on DB errors
+
+Interview Note:
+    Q: Why JSON fallback instead of just failing when the DB is down?
+    A: Graceful degradation. In a demo/school project, having a working
+       frontend is more important than perfect persistence. The JSON
+       fallback lets the system serve products even if PostgreSQL is not
+       running.
+       
+    Q: How would you improve this for production?
+    A: 1. Redis cache with TTL for hot products
+       2. Database connection pooling with circuit breaker (e.g., pybreaker)
+       3. Event-driven cache invalidation when stock changes
+       4. Full-text search (PostgreSQL tsvector or Elasticsearch) for product discovery
+"""
 from pathlib import Path
 
 from backend.database.engine import AsyncSessionLocal

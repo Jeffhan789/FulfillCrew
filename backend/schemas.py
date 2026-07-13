@@ -1,4 +1,28 @@
-"""Pydantic schemas for API request/response validation."""
+"""Pydantic schemas for API request/response validation and serialisation.
+
+Pydantic is the data validation layer in FastAPI. Every request body and
+response is defined as a BaseModel subclass, giving us:
+    - Automatic JSON parsing and validation
+    - Type coercion (e.g., "42" → 42 for int fields)
+    - Self-documenting OpenAPI schemas
+    - IDE autocomplete and type checking
+
+Schema Organisation:
+    - Product / BasketItem: Domain entities
+    - OrderRequest / OrderResponse: API contract for the main flow
+    - AgentDecision / WarehouseBid: MAS audit trail
+    - ModelEvaluation / CourseMapping: Academic metadata
+
+Interview Note:
+    Q: What's the difference between Pydantic and dataclasses?
+    A: Pydantic validates and coerces data at construction time. Dataclasses
+       are just syntactic sugar for __init__ and don't validate types.
+       Pydantic also integrates with JSON Schema, making it ideal for APIs.
+       
+    Q: Why Optional[str] instead of str | None?
+    A: Both work in Python 3.10+. FulfillCrew uses Optional for compatibility
+       with older type checkers, though str | None is the modern preferred style.
+"""
 from typing import Optional
 from pydantic import BaseModel, Field
 

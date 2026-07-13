@@ -1,4 +1,26 @@
-from fastapi import APIRouter
+"""Agents API Router — academic metadata and model evaluation endpoints.
+
+This module is unique to FulfillCrew as an academic project. It provides
+endpoints that explicitly map the implementation to the three university
+modules, making it easy to demonstrate course relevance during a viva or
+technical interview.
+
+Endpoints:
+    GET /agents           — List all agent names (for discovery)
+    GET /agents/course-map — Map implementation to COMP315/COMP310/ELEC320
+    GET /agents/model-evaluations — Return demo metrics for ML models
+
+Interview Note:
+    Q: Why expose course mappings as API endpoints instead of documentation?
+    A: The frontend dashboard renders these dynamically, showing a live
+       connection between theory and practice. This makes the project more
+       impressive to examiners who can see the mapping in the UI.
+       
+    Q: Are the model evaluation scores real or demo values?
+    A: The /agents/model-evaluations endpoint returns demo/static values for
+       illustration. Real model evaluations are computed at inference time
+       (see OrderService._model_evaluations) and returned in the OrderResponse.
+"""
 from backend.schemas import CourseMapping, ModelEvaluation
 
 router = APIRouter(prefix="/agents", tags=["agents"])
