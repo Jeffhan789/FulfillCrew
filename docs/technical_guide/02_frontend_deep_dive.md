@@ -78,7 +78,7 @@ TypeScript 的**类型收窄**（Type Narrowing）在条件渲染中特别有用
   4. 生成优化后的静态资源
 ```
 
-**面试考点**：Vite 的「按需编译」与 webpack 的「全量打包」的根本区别。webpack 在开发阶段也需要构建完整的依赖图，而 Vite 利用浏览器原生 ESM 支持，将"构建"延迟到请求发生时。
+**架构复盘考点**：Vite 的「按需编译」与 webpack 的「全量打包」的根本区别。webpack 在开发阶段也需要构建完整的依赖图，而 Vite 利用浏览器原生 ESM 支持，将"构建"延迟到请求发生时。
 
 ---
 
@@ -126,7 +126,7 @@ export function useOrderSocket(orderId: string | null) {
 3. **清理函数**：`return () => ws.close()` 防止内存泄漏，这是 React 18 StrictMode 双重挂载/卸载的安全保障
 4. **状态外显**：`connected` 状态用于 UI 显示 "● Live / ○ Offline"
 
-### 3.2 面试追问：如果每秒接收 100 条消息，会卡顿吗？
+### 3.2 架构复盘追问：如果每秒接收 100 条消息，会卡顿吗？
 
 **答案**：React 18 的 Automatic Batching 会合并同一事件循环中的多次 `setStatus`，但如果消息频率极高，仍需要：
 - 使用 `useRef` 保存最新状态，配合 `requestAnimationFrame` 节流渲染
@@ -172,7 +172,7 @@ export function useOrderSocket(orderId: string | null) {
 
 ## 5. 组件架构：单一职责
 
-| 组件 | 职责 | 输入 props | 面试亮点 |
+| 组件 | 职责 | 输入 props | 架构复盘亮点 |
 |------|------|-----------|---------|
 | `App` | 数据获取、状态管理、布局编排 | 无 | 使用 `useMemo` 优化商品列表过滤排序 |
 | `WarehouseBidChart` | 仓库竞价可视化 | `bids: WarehouseBid[]` | 双轴 ComposedChart，自定义 Tooltip |
@@ -210,7 +210,7 @@ const visibleProducts = useMemo(() => {
 
 ---
 
-## 7. 面试高频题
+## 7. 架构复盘高频题
 
 **Q: 为什么用 React 的函数组件而不是 Class 组件？**
 
@@ -226,4 +226,4 @@ const visibleProducts = useMemo(() => {
 
 **Q: 如果后端推送 10MB 的 JSON，前端会卡吗？怎么处理？**
 
-> A: 会卡。处理方式：1) 后端做分页/增量更新；2) 前端用 Web Worker 解析 JSON；3) 虚拟滚动（Virtual List）只渲染可视区域。本项目目前订单数据量小，暂未引入这些优化，但面试中应提及扩展方案。
+> A: 会卡。处理方式：1) 后端做分页/增量更新；2) 前端用 Web Worker 解析 JSON；3) 虚拟滚动（Virtual List）只渲染可视区域。本项目目前订单数据量小，暂未引入这些优化，但架构复盘中应提及扩展方案。

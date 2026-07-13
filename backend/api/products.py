@@ -11,7 +11,7 @@ Caching Note:
     Product catalogues are read-heavy and change infrequently. In production
     you'd add HTTP Cache-Control headers and Redis caching.
 
-Interview Note:
+Engineering Note:
     Q: Why a separate /products endpoint instead of embedding in /orders?
     A: RESTful resource separation. Products are an independent domain entity
        with their own lifecycle. A separate endpoint enables product browsing

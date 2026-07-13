@@ -16,7 +16,7 @@ Connection Lifecycle:
     4. Client receives push and updates React state
     5. Client disconnects → manager removes mapping
 
-Interview Note:
+Engineering Note:
     Q: Why WebSocket instead of Server-Sent Events (SSE) or polling?
     A: WebSocket is bidirectional, which lets us implement heartbeat/pong
        for connection health. SSE is simpler but only server→client. Polling

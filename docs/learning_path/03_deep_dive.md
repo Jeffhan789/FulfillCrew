@@ -38,10 +38,10 @@
 │  C. "ML 模型部分需要加强"                                    │
 │     → 专题三（MLP）→ technical_guide/05_ml_models_deep_dive   │
 │                                                             │
-│  D. "面试时被问了 Docker 和部署"                             │
+│  D. "架构复盘时被问了 Docker 和部署"                             │
 │     → 专题四（Docker 多阶段构建）→ technical_guide/07_docker   │
 │                                                             │
-│  E. "前端面试准备"                                           │
+│  E. "前端架构复盘准备"                                           │
 │     → 专题五（React 并发）→ technical_guide/02_frontend        │
 │                                                             │
 │  F. "运维/SRE 方向"                                          │
@@ -519,4 +519,4 @@ async with AsyncSessionLocal() as session:
 
 ---
 
-> 💡 **建议**：不要一次性读完所有专题。先选择最感兴趣或面试最需要的 1-2 个专题深入，其他作为备用参考。
+> 💡 **建议**：不要一次性读完所有专题。先选择最感兴趣或架构复盘最需要的 1-2 个专题深入，其他作为备用参考。

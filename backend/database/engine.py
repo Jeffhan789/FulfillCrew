@@ -12,7 +12,7 @@ SQLAlchemy 2.0 vs 1.x Differences:
     - select() instead of query()
     - AsyncSession with explicit await on all DB operations
 
-Interview Note:
+Engineering Note:
     Q: Why asyncpg instead of psycopg2?
     A: asyncpg is a native async PostgreSQL driver that supports
        high-concurrency without blocking the event loop. psycopg2 is synchronous

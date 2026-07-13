@@ -1,6 +1,6 @@
 # FulfillCrew 学习路径教程
 
-> 目标：从零开始，按阶段掌握 FulfillCrew（智仓通）的技术栈，能够在面试中清晰讲解每个设计决策。
+> 目标：从零开始，按阶段掌握 FulfillCrew（智仓通）的技术栈，能够在架构复盘中清晰讲解每个设计决策。
 
 ---
 
@@ -19,7 +19,7 @@
     ↓
 阶段 6: DevOps 与部署（2-3 天）
     ↓
-阶段 7: 面试准备与深度问答（持续）
+阶段 7: 架构复盘准备与深度问答（持续）
 ```
 
 ---
@@ -36,7 +36,7 @@
 **项目核心理念：**
 > 将一个简单的课程作业电商原型，工程化升级为一个完整的订单智能履约系统。
 
-这意味着面试官看到的不是一个"做作业"的项目，而是一个展示了**工程化思维**、**升级迭代能力**的作品。
+这意味着评审者看到的不是一个"做作业"的项目，而是一个展示了**工程化思维**、**升级迭代能力**的作品。
 
 **三门课程映射：**
 
@@ -70,7 +70,7 @@
    curl http://localhost:8000/agents/model-evaluations
    ```
 
-### 面试要点
+### 架构复盘要点
 > "这个项目不是普通的电商购物车，它展示了**课程知识的工程化落地**。三门课的核心概念——云计算架构、多智能体协调、神经网络——都被整合在一个可运行的系统中。"
 
 ---
@@ -86,7 +86,7 @@
 
 **为什么选 React 18 + TypeScript + Vite？**
 
-| 技术 | 面试中的回答要点 |
+| 技术 | 架构复盘中的回答要点 |
 |------|-----------------|
 | React 18 | 函数组件 + Hooks 模式，Concurrent Features 为将来升级留空间 |
 | TypeScript | 类型安全，接口（`OrderResponse`、`WarehouseBid`）即文档，减少运行时错误 |
@@ -116,7 +116,7 @@ const { status: wsStatus, connected } = useOrderSocket(order?.order_id || null);
 **为什么用 useState 而不是 Redux/Zustand？**
 - 状态层级浅（3-4 个顶层状态）
 - 无跨组件深层传递需求
-- 面试中可以展示"**根据复杂度选择工具**"的工程判断力
+- 架构复盘中可以展示"**根据复杂度选择工具**"的工程判断力
 
 **6 个 Dashboard 组件分工：**
 
@@ -154,7 +154,7 @@ export function useOrderSocket(orderId: string | null) {
 }
 ```
 
-**面试必问：为什么 WebSocket 而不是轮询？**
+**架构复盘必问：为什么 WebSocket 而不是轮询？**
 - 轮询：客户端每隔 N 秒请求一次，浪费带宽和服务器资源
 - WebSocket：服务端推送，即时、单向（服务端→客户端）、连接复用
 - 订单状态变更是**事件驱动**的，不是时间驱动的
@@ -183,7 +183,7 @@ class ConnectionManager:
 2. **添加 Loading 状态**：在 `fetch` 请求期间显示 loading spinner
 3. **WebSocket 调试**：在浏览器 Console 中观察 WebSocket 消息流
 
-### 面试要点
+### 架构复盘要点
 > "前端采用**轻量级状态管理**（useState/useMemo）而非重型状态库，因为状态层级浅。Dashboard 组件用 **Recharts 声明式渲染**，6 个组件统一数据流。WebSocket 提供**实时订单状态推送**，替代了低效的轮询机制。"
 
 ---
@@ -212,7 +212,7 @@ app = FastAPI(
 )
 ```
 
-**面试要点：为什么用 `lifespan` 而不是 `on_event`？**
+**架构复盘要点：为什么用 `lifespan` 而不是 `on_event`？**
 - `on_event("startup")` / `on_event("shutdown")` 在 FastAPI 0.95+ 已标记为弃用
 - `lifespan` 是 ASGI 标准，支持异步上下文管理，更现代、更规范
 
@@ -225,7 +225,7 @@ default_origins = [
 ]
 ```
 
-> 面试中说：CORS 配置**区分了开发环境和生产环境**，Docker 内外网络不同，不能一刀切。
+> 架构复盘中说：CORS 配置**区分了开发环境和生产环境**，Docker 内外网络不同，不能一刀切。
 
 ### 3.2 SQLAlchemy 2.0 Async + Repository 模式
 
@@ -243,7 +243,7 @@ class ProductORM(Base):
     )
 ```
 
-**面试要点：**
+**架构复盘要点：**
 - `Mapped[T]` 类型注解：SQLAlchemy 2.0 的**类型声明式映射**，IDE 友好
 - `lazy="selectin"`：避免 N+1 查询，用 `SELECT IN` 批量加载关联数据
 - `cascade="all, delete-orphan"`：删除订单时自动删除关联的 items/decisions/bids
@@ -273,7 +273,7 @@ class OrderRepository:
         return result.scalar_one_or_none()
 ```
 
-**面试必问：Repository 模式的优势？**
+**架构复盘必问：Repository 模式的优势？**
 1. **抽象数据访问**：业务逻辑不直接操作 SQL/ORM，便于切换数据库
 2. **测试友好**：可以 mock Repository 而不是 mock 整个数据库
 3. **事务边界清晰**：Repository 的方法内部不处理 commit，由调用方控制事务
@@ -298,7 +298,7 @@ class OrderRequest(BaseModel):
     is_new_user: bool = True
 ```
 
-**面试要点：**
+**架构复盘要点：**
 - Pydantic v2 的 `Field()` 验证：在请求到达业务逻辑之前就拒绝无效数据
 - FastAPI 自动将 Pydantic 模型转换为 OpenAPI Schema，生成 `/docs` 交互文档
 - 类型安全：`OrderResponse` 严格定义了 API 返回的字段，前后端契约清晰
@@ -327,7 +327,7 @@ class OrderService:
 2. **添加一个 API 端点**：在 `orders.py` 中添加 `GET /orders/{order_id}`
 3. **修改 Schema 验证**：在 `OrderRequest` 中添加 `shipping_address` 字段并验证不为空
 
-### 面试要点
+### 架构复盘要点
 > "后端采用 **FastAPI 异步架构**，SQLAlchemy 2.0 的 `Mapped` 类型注解配合 `selectinload` 避免 N+1。Repository 模式抽象了数据访问层，Pydantic Schema 在请求入口就完成验证。Service 层作为**编排器**协调多个 Agent，保持了关注点分离。"
 
 ---
@@ -377,7 +377,7 @@ class CoordinatorAgent(BaseAgent):
         return bids, winner
 ```
 
-**面试必问：为什么选择最低竞价而不是加权评分？**
+**架构复盘必问：为什么选择最低竞价而不是加权评分？**
 - 最低竞价是**最直接、最可解释**的策略
 - 加权评分需要调参，且参数选择主观
 - 竞价公式本身已经包含了 workload、stock、distance、speed 的加权
@@ -405,7 +405,7 @@ def bid(self, item_count: int) -> WarehouseBid:
 | distance_penalty | 0.15 | 距离越远，配送成本越高 |
 | speed_bonus | 1.1 | 处理速度越快， bid 越低（负向） |
 
-> **面试要点**：这是一个**启发式评分函数**（heuristic scoring function），不是训练出来的模型。它展示了"在没有训练数据时，如何用领域知识设计可解释的决策逻辑"。
+> **架构复盘要点**：这是一个**启发式评分函数**（heuristic scoring function），不是训练出来的模型。它展示了"在没有训练数据时，如何用领域知识设计可解释的决策逻辑"。
 
 ### 4.3 6 个 Agent 的完整协作流程
 
@@ -454,7 +454,7 @@ def bid(self, item_count: int) -> WarehouseBid:
 | 课程映射 | 无法对应 COMP310 | 直接对应 Multi-Agent Systems 课程内容 |
 | 替换能力 | 改一处可能影响全局 | 替换 Fraud Detection Agent 不影响其他 Agent |
 
-> **面试金句**："多智能体架构不是过度设计，而是**课程知识的直接映射**。COMP310 讲的就是自主 Agent 协商，代码里就是 6 个 Agent 协作。"
+> **架构复盘金句**："多智能体架构不是过度设计，而是**课程知识的直接映射**。COMP310 讲的就是自主 Agent 协商，代码里就是 6 个 Agent 协作。"
 
 ### 4.4 Agent 决策日志（决策可解释性）
 
@@ -477,7 +477,7 @@ def _course_trace(self) -> list[AgentDecision]:
 ```
 
 **为什么每个订单都返回 course_trace？**
-- 这是一个**教学/展示项目**，需要向用户（和面试官）证明系统设计是有理论依据的
+- 这是一个**教学/展示项目**，需要向用户（和评审者）证明系统设计是有理论依据的
 - `course_trace` 不是业务逻辑，是**元数据**——证明"这不是拍脑袋做的"
 
 ### 4.5 动手实验
@@ -486,7 +486,7 @@ def _course_trace(self) -> list[AgentDecision]:
 2. **添加新 Agent**：创建一个 `ShippingAgent`，负责选择物流方式
 3. **修改 Fraud 阈值**：将 0.65 改为 0.5，观察订单状态变化
 
-### 面试要点
+### 架构复盘要点
 > "订单履约流程采用**简化版 Contract Net Protocol**：Coordinator Agent 发布任务，3 个 Warehouse Agent 基于 workload、stock、distance、speed 计算可解释竞价，最低 bid 胜出。6 个 Agent 各司其职，Fraud → Inventory → Coordinator → Demand 形成**流水线式决策链**。每个 Agent 的决策独立记录，保证了可解释性。"
 
 ---
@@ -541,7 +541,7 @@ def predict_demand(product_features: Dict[str, Any]) -> int:
     # ... 加载 PyTorch 模型并推理
 ```
 
-> **面试要点**：这种设计叫做 **Graceful Degradation（优雅降级）**。系统在没有训练好的模型时仍能运行，用启发式函数替代。这保证了 MVP 可立即运行，同时为后续模型升级预留接口。
+> **架构复盘要点**：这种设计叫做 **Graceful Degradation（优雅降级）**。系统在没有训练好的模型时仍能运行，用启发式函数替代。这保证了 MVP 可立即运行，同时为后续模型升级预留接口。
 
 ### 5.2 Fraud Detection — XGBoost + SHAP
 
@@ -573,7 +573,7 @@ shap_explanation = {
 }
 ```
 
-> **面试要点**：SHAP（SHapley Additive exPlanations）基于**博弈论中的 Shapley 值**，计算每个特征对预测结果的边际贡献。这满足了**模型可解释性**的需求——不仅是"这个订单有风险"，还要解释"为什么"。
+> **架构复盘要点**：SHAP（SHapley Additive exPlanations）基于**博弈论中的 Shapley 值**，计算每个特征对预测结果的边际贡献。这满足了**模型可解释性**的需求——不仅是"这个订单有风险"，还要解释"为什么"。
 
 **风险评分计算（启发式 Fallback）：**
 
@@ -614,7 +614,7 @@ class ModelEvaluation(BaseModel):
 | training_mode | 展示理论理解 | "用历史特征训练回归权重"——证明你知道怎么训练 |
 | online_mode | 展示工程理解 | "在结账时调用模型预测"——证明你知道怎么部署 |
 
-> **面试金句**："每个 ML 模块都设计了**稳定的推理接口**，包含 `training_mode` 和 `online_mode` 描述。这意味着即使现在用的是启发式 fallback，后续替换为真实训练模型时，**Agent 契约不需要改变**。"
+> **架构复盘金句**："每个 ML 模块都设计了**稳定的推理接口**，包含 `training_mode` 和 `online_mode` 描述。这意味着即使现在用的是启发式 fallback，后续替换为真实训练模型时，**Agent 契约不需要改变**。"
 
 ### 5.4 动手实验
 
@@ -622,7 +622,7 @@ class ModelEvaluation(BaseModel):
 2. **修改 MLP 架构**：将 `DemandMLP` 的隐藏层从 [64, 32] 改为 [128, 64, 32]，观察推理速度
 3. **SHAP 可视化**：在 Jupyter Notebook 中加载 TreeExplainer，绘制 SHAP summary plot
 
-### 面试要点
+### 架构复盘要点
 > "需求预测使用 **PyTorch MLP**（2 隐藏层 + Dropout），输入 9 维特征，输出未来 7 天销量。欺诈检测使用 **XGBoost + SHAP**，XGBoost 提供高准确率的二分类，SHAP 提供基于博弈论的特征可解释性。每个模型都设计了 **fallback 机制**（启发式函数），确保无训练模型时系统仍可运行。"
 
 ---
@@ -656,7 +656,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 ```
 
-**面试要点：**
+**架构复盘要点：**
 - 多阶段构建的核心优势：**构建产物（node_modules、TypeScript 编译器）不进入最终镜像**
 - 最终镜像只包含 Nginx + 静态文件，体积极小（~20MB vs 几百MB）
 - 攻击面更小：运行时不包含 npm、node 等工具
@@ -707,7 +707,7 @@ services:
         condition: service_healthy
 ```
 
-**面试要点：**
+**架构复盘要点：**
 - `condition: service_healthy` 是 Docker Compose 3.20+ 的特性，确保**依赖服务真正就绪**才开始启动
 - 没有 `depends_on` 的 `condition`，服务可能启动了但数据库还没准备好，导致连接失败
 - 健康检查链：`postgres → redis → backend → frontend`，形成**有序启动**
@@ -737,7 +737,7 @@ location /api/ {
 | `X-Real-IP` / `X-Forwarded-For` | 传递真实客户端 IP（后端日志用） |
 | `try_files $uri $uri/ /index.html` | SPA 路由回退（React Router 需要） |
 
-> **面试要点**：Nginx 在这里扮演**网关层**角色：静态文件服务、API 反向代理、WebSocket 升级、SPA 回退，全部在一个配置中完成。
+> **架构复盘要点**：Nginx 在这里扮演**网关层**角色：静态文件服务、API 反向代理、WebSocket 升级、SPA 回退，全部在一个配置中完成。
 
 ### 6.4 健康检查与监控
 
@@ -759,7 +759,7 @@ structlog.configure(
 )
 ```
 
-**面试要点：**
+**架构复盘要点：**
 - JSON 日志可以直接被 **ELK Stack**（Elasticsearch + Logstash + Kibana）或 **Grafana Loki** 消费
 - 每个日志事件包含 `order_id`、`event` 等上下文，便于**分布式追踪**
 - Fallback 机制：structlog 不可用时自动回退到 stdlib logging，确保系统不崩溃
@@ -782,7 +782,7 @@ fraud_score = Gauge(
 )
 ```
 
-**面试要点：**
+**架构复盘要点：**
 - Counter：单调递增的计数器（如订单总数）
 - Histogram：分布型指标（如处理延迟），Prometheus 自动计算分位数
 - Gauge：可增可减的指标（如当前风险评分）
@@ -807,7 +807,7 @@ async def health_check(db: AsyncSession = Depends(get_db)) -> HealthCheck:
     return HealthCheck(status=status, checks=checks)
 ```
 
-> **面试要点**：健康检查不是简单的 `{"status": "ok"}`，而是**分级检查**每个依赖（数据库、Redis、模型文件）。"degraded" 状态告诉运维"系统还能运行，但某些功能受限"。
+> **架构复盘要点**：健康检查不是简单的 `{"status": "ok"}`，而是**分级检查**每个依赖（数据库、Redis、模型文件）。"degraded" 状态告诉运维"系统还能运行，但某些功能受限"。
 
 ### 6.5 Event Bus — Redis / InMemory
 
@@ -833,7 +833,7 @@ async def get_event_bus(redis_url: str | None = None) -> EventBus:
     return InMemoryEventBus()  # 自动降级
 ```
 
-**面试要点：**
+**架构复盘要点：**
 - **抽象接口**：`EventBus` 是抽象基类，Redis 和 InMemory 是两种实现
 - **自动降级**：Redis 不可用时自动回退到内存实现，开发环境无需安装 Redis
 - **统一的事件常量**：`ORDER_CREATED`, `FRAUD_CHECKED`, `INVENTORY_CHECKED` 等，避免魔法字符串
@@ -844,12 +844,12 @@ async def get_event_bus(redis_url: str | None = None) -> EventBus:
 2. **添加 Prometheus 指标**：在 `OrderService` 中新增一个指标（如 `inventory_check_duration`）
 3. **配置日志级别**：通过环境变量 `BACKEND_LOG_LEVEL=debug` 观察详细日志
 
-### 面试要点
+### 架构复盘要点
 > "部署采用 **Docker 多阶段构建**，前端镜像从 ~300MB 压缩到 ~20MB。Docker Compose 使用 `depends_on.condition: service_healthy` 实现**有序启动**。Nginx 作为网关统一处理静态文件、API 代理和 WebSocket 升级。日志使用 **structlog 输出 JSON**，指标使用 **Prometheus Counter/Histogram/Gauge**，全部带有 **fallback 机制**确保系统鲁棒性。"
 
 ---
 
-## 阶段 7：面试准备与深度问答（持续）
+## 阶段 7：架构复盘准备与深度问答（持续）
 
 ### 7.1 项目介绍（2 分钟版本）
 
@@ -859,7 +859,7 @@ async def get_event_bus(redis_url: str | None = None) -> EventBus:
 
 > "亮点有三个：第一，**多智能体协调**不是过度设计，而是课程知识的直接映射；第二，**ML 模型接口**设计了 fallback 机制，确保无训练数据时系统仍可运行；第三，**工程化细节**到位——结构化 JSON 日志、Prometheus 指标、分级健康检查、Docker 有序启动。"
 
-### 7.3 常见技术面试问题速查
+### 7.3 常见技术架构复盘问题速查
 
 **关于架构：**
 - Q: 为什么用多智能体而不是单一函数？
@@ -908,4 +908,4 @@ async def get_event_bus(redis_url: str | None = None) -> EventBus:
 
 ---
 
-> 祝你面试顺利！有任何问题，随时回到这份教程查阅。🚀
+> 祝你架构复盘顺利！有任何问题，随时回到这份教程查阅。🚀

@@ -2,15 +2,14 @@
 
 This module is unique to FulfillCrew as an academic project. It provides
 endpoints that explicitly map the implementation to the three university
-modules, making it easy to demonstrate course relevance during a viva or
-technical interview.
+modules, making it easy to trace course concepts during technical review.
 
 Endpoints:
     GET /agents           — List all agent names (for discovery)
     GET /agents/course-map — Map implementation to COMP315/COMP310/ELEC320
     GET /agents/model-evaluations — Return demo metrics for ML models
 
-Interview Note:
+Engineering Note:
     Q: Why expose course mappings as API endpoints instead of documentation?
     A: The frontend dashboard renders these dynamically, showing a live
        connection between theory and practice. This makes the project more

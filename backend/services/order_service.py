@@ -20,7 +20,7 @@ Design Patterns Used:
     - Observer: WebSocket manager pushes real-time updates to frontend
     - Circuit Breaker (implicit): ProductService falls back to JSON if DB fails
 
-Interview Note:
+Engineering Note:
     Q: Why is the pipeline sequential rather than parallel?
     A: Fraud detection MUST run before inventory reservation (security).
        Inventory check MUST run before warehouse bidding (no point bidding
@@ -101,7 +101,7 @@ class OrderService:
         
         This is a pedagogical feature that shows which university module
         contributed to each architectural layer. It helps examiners and
-        interviewers understand the theoretical foundations.
+        reviewers understand the theoretical foundations.
         """
         return [
             AgentDecision(
@@ -122,7 +122,7 @@ class OrderService:
         """Generate model evaluation metadata for the frontend dashboard.
         
         This bridges the gap between "running code" and "academic explanation",
-        making it easy to defend the project in a viva or technical interview.
+        making the design traceable during independent technical review.
         """
         return [
             ModelEvaluation(
@@ -163,7 +163,7 @@ class OrderService:
             No exceptions are raised — all error paths return a response with
             an appropriate status (e.g., "rejected_out_of_stock").
             
-        Interview Note:
+        Engineering Note:
             Q: Walk me through what happens when a user clicks "Place Order".
             A: 1. Frontend POSTs to /orders with BasketItem list
                2. FastAPI validates via Pydantic (OrderRequest schema)
@@ -547,7 +547,7 @@ class OrderService:
             products: Product map (required if update_stock=True)
             request_items: Basket items (required if update_stock=True)
             
-        Interview Note:
+        Engineering Note:
             Q: Why Repository pattern instead of direct SQLAlchemy calls?
             A: Repositories encapsulate data access logic, making unit testing
                easier (mock the repository) and allowing future DB migrations

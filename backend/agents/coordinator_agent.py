@@ -8,7 +8,7 @@ CNP is a multi-agent interaction protocol where:
 
 This is the core COMP310 Multi-Agent Systems concept demonstrated in FulfillCrew.
 
-Interview Questions & Answers:
+Architecture Questions & Answers:
     Q: Why CNP instead of centralized optimisation?
     A: CNP is decentralised, fault-tolerant, and mirrors real-world logistics
        where each warehouse has private cost functions.
@@ -59,7 +59,7 @@ class CoordinatorAgent(BaseAgent):
             A tuple of (all_bids, winning_bid) where the winner is selected
             by the lowest bid value (lower = better).
             
-        Interview Note:
+        Engineering Note:
             Q: Why min() with key=lambda bid: bid.bid?
             A: This is the "award" step of CNP. The scoring function is
                encapsulated inside each WarehouseAgent.bid() call, so the

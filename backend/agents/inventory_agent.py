@@ -18,7 +18,7 @@ class InventoryAgent(BaseAgent):
     1. check_stock: optimistic read to verify availability
     2. reserve_stock: pessimistic write (decrement) after fraud clearance
     
-    Interview Note:
+    Engineering Note:
         Q: How do you handle concurrent orders for the same product?
         A: The actual stock update happens in OrderService._persist_order
            inside an async SQLAlchemy transaction. The repository calls

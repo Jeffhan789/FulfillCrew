@@ -72,9 +72,6 @@ fulfillcrew-frontend | ... nginx started
 | 健康检查 | `http://localhost:8000/health` | JSON 返回 `{"status": "healthy"}` |
 | Prometheus 指标 | `http://localhost:8000/metrics` | 看到原始指标文本 |
 
-> 🖼️ **[截图占位]**：前端商品列表页面首页
-> ![前端首页截图](assets/screenshot_01_homepage.png)
-
 ---
 
 ## 步骤 2：添加商品到购物车并结账（5 分钟）
@@ -86,9 +83,6 @@ fulfillcrew-frontend | ... nginx started
 - 使用搜索框搜索商品名称
 - 使用排序下拉菜单按价格/评分排序
 - 勾选 "In stock" 仅显示有库存商品
-
-> 🖼️ **[截图占位]**：商品列表 + 搜索 + 排序功能
-> ![商品浏览截图](assets/screenshot_02_products.png)
 
 ### 2.2 添加商品到购物车
 
@@ -105,9 +99,6 @@ fulfillcrew-frontend | ... nginx started
 1. 按钮变为加载状态（短暂）
 2. 页面下方出现订单结果面板
 3. 订单状态从 `pending` → 经过 `fraud.checked` → `inventory.checked` → `warehouse.bid` → `fulfillment.completed`
-
-> 🖼️ **[截图占位]**：结账成功后的订单结果面板
-> ![订单结果截图](assets/screenshot_03_order_result.png)
 
 ---
 
@@ -140,9 +131,6 @@ fulfillcrew-frontend | ... nginx started
 > - 后端推送：`backend/api/websocket.py` → `manager.send_order_update()`
 > - 前端接收：`frontend/src/hooks/useOrderSocket.ts` → `WebSocket` 连接
 
-> 🖼️ **[截图占位]**：WebSocket 实时状态栏 + 决策日志时间线
-> ![WebSocket 状态截图](assets/screenshot_04_websocket.png)
-
 ---
 
 ## 步骤 4：浏览 Swagger UI 理解 API（10 分钟）
@@ -150,9 +138,6 @@ fulfillcrew-frontend | ... nginx started
 ### 4.1 打开 Swagger 文档
 
 访问 `http://localhost:8000/docs`，你将看到 FastAPI 自动生成的交互式 API 文档：
-
-> 🖼️ **[截图占位]**：Swagger UI 首页
-> ![Swagger 截图](assets/screenshot_05_swagger.png)
 
 ### 4.2 核心 API 速览
 
@@ -205,9 +190,6 @@ fulfillcrew-frontend | ... nginx started
 }
 ```
 
-> 🖼️ **[截图占位]**：Swagger UI 中执行 /orders POST 的结果
-> ![API 调用截图](assets/screenshot_06_api_call.png)
-
 ---
 
 ## 步骤 5：查看前端 Dashboard（5 分钟）
@@ -224,9 +206,6 @@ fulfillcrew-frontend | ... nginx started
 | **Order Status Timeline** | 决策日志时间线 | `decision_log` 数组 |
 | **System Health Panel** | 系统健康状态 | `/health` API |
 | **Model Evaluation Panel** | 模型评估详情 | `model_evaluations` 数组 |
-
-> 🖼️ **[截图占位]**：完整的 Dashboard 视图
-> ![Dashboard 截图](assets/screenshot_07_dashboard.png)
 
 ### 5.2 Course Dashboard
 
@@ -255,11 +234,10 @@ fulfillcrew-frontend | ... nginx started
 
 ## 下一步
 
-恭喜！你已经完成了 30 分钟快速上手。现在你有两个选择：
+恭喜！你已经完成了 30 分钟快速上手。现在可以选择：
 
-1. **想继续深入了解** → 前往 [`01_module_by_module.md`](./01_module_by_module.md) 开始 4 周逐模块学习
-2. **准备面试** → 前往 [`02_interview_prep.md`](./02_interview_prep.md) 开始 3 天面试突击
-3. **遇到问题了** → 前往 [`04_troubleshooting.md`](./04_troubleshooting.md) 查找解决方案
+1. **逐模块理解** → 前往 [`01_module_by_module.md`](./01_module_by_module.md) 阅读核心实现
+2. **按专题深入** → 前往 [`03_deep_dive.md`](./03_deep_dive.md) 定位具体技术主题
 
 ---
 

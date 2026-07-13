@@ -9,7 +9,7 @@ Design Patterns:
     - Thin Controller: API layer only validates input and serialises output
     - Facade: OrderService hides the complexity of 6 cooperating agents
 
-Interview Note:
+Engineering Note:
     Q: Why not put business logic directly in the route handler?
     A: Separation of concerns. The router handles HTTP concerns (status codes,
        headers, serialisation). The service handles domain logic (fraud, inventory,

@@ -18,7 +18,7 @@ Environment Variables:
     BACKEND_PORT      → HTTP server port
     CORS_ORIGINS      → Comma-separated allowed origins
 
-Interview Note:
+Engineering Note:
     Q: Why frozen dataclass instead of a dict or global variables?
     A: Immutable dataclasses prevent accidental mutation at runtime.
        Type checkers (mypy, pyright) can verify usage. The property

@@ -33,7 +33,7 @@ class BaseAgent:
     but shares the same logging/audit interface. This ensures every decision
     is traceable for debugging and academic demonstration.
     
-    Interview Note:
+    Engineering Note:
         Q: Why use a base class instead of plain functions?
         A: Agents need shared identity, audit trails, and extensibility.
            BaseAgent guarantees every agent produces structured AgentDecision

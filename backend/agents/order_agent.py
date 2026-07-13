@@ -16,7 +16,7 @@ from backend.agents.base_agent import BaseAgent
 class OrderAgent(BaseAgent):
     """Represents the customer-facing order intake agent.
     
-    Interview Note:
+    Engineering Note:
         Q: What is the difference between OrderAgent and OrderService?
         A: OrderAgent is the *agent* role in the MAS architecture (COMP310).
            OrderService is the *application service* in the layered architecture

@@ -159,7 +159,7 @@ def build_doc():
         "一句话定位",
         [
             "本项目把 COMP315 的两个 coursework 从“数据清洗 + React 电商前端”升级为一个完整的 AI + Multi-Agent 电商系统。",
-            "它的价值不在于从零堆功能，而在于把已有课程成果继续工程化、智能化、系统化，形成可展示、可解释、可迭代的 portfolio project。",
+            "它的价值不在于从零堆功能，而在于把已有课程成果继续工程化、智能化、系统化，形成可展示、可解释、可迭代的 reference implementation。",
         ],
     )
 
@@ -281,7 +281,7 @@ def build_doc():
         widths=[2.4, 5.8, 7.6],
     )
 
-    add_heading(doc, "10. 简历与 README 表述", 1)
+    add_heading(doc, "10. 项目摘要与 README 表述", 1)
     add_callout(
         doc,
         "英文项目描述",

@@ -114,7 +114,7 @@ async def get_event_bus(redis_url: str | None = None) -> EventBus:
     return InMemoryEventBus()
 ```
 
-**面试表达**："事件总线设计了两层回退：Redis 优先，InMemory 兜底。这体现防御性编程——核心功能不依赖外部服务可用性。如果后续扩展到微服务，Redis pub/sub 天然支持跨进程通信。"
+**架构复盘表达**："事件总线设计了两层回退：Redis 优先，InMemory 兜底。这体现防御性编程——核心功能不依赖外部服务可用性。如果后续扩展到微服务，Redis pub/sub 天然支持跨进程通信。"
 
 ---
 
@@ -164,7 +164,7 @@ structlog.configure(
 )
 ```
 
-**面试表达**："structlog 的 processor 链是函数式管道设计，每个 processor 接收事件字典、加工后传给下一个。最终 JSONRenderer 输出结构化日志。这种链式处理让日志格式完全可定制，比如我可以插入一个 processor 自动脱敏敏感字段。"
+**架构复盘表达**："structlog 的 processor 链是函数式管道设计，每个 processor 接收事件字典、加工后传给下一个。最终 JSONRenderer 输出结构化日志。这种链式处理让日志格式完全可定制，比如我可以插入一个 processor 自动脱敏敏感字段。"
 
 ### 2.3 使用示例
 
@@ -330,7 +330,7 @@ frontend:
 3. Backend 启动 → 依赖 postgres 和 redis
 4. Frontend 启动 → 依赖 backend
 
-**面试表达**："健康检查不只是返回 200，而是探测所有关键依赖（数据库、缓存、模型文件）。Docker Compose 的 `condition: service_healthy` 让服务按正确顺序启动，避免后端在数据库未就绪时报错。"
+**架构复盘表达**："健康检查不只是返回 200，而是探测所有关键依赖（数据库、缓存、模型文件）。Docker Compose 的 `condition: service_healthy` 让服务按正确顺序启动，避免后端在数据库未就绪时报错。"
 
 ---
 
@@ -371,7 +371,7 @@ async def websocket_endpoint(websocket: WebSocket, order_id: str):
         manager.disconnect(order_id)
 ```
 
-**面试表达**："WebSocket 用于订单状态实时推送。每个订单对应一个 WebSocket 连接（按 order_id 隔离）。后端在 Agent 处理每个步骤后主动推送事件，前端通过 `useOrderSocket` hook 接收并更新 UI。这比轮询更高效，延迟从秒级降到毫秒级。"
+**架构复盘表达**："WebSocket 用于订单状态实时推送。每个订单对应一个 WebSocket 连接（按 order_id 隔离）。后端在 Agent 处理每个步骤后主动推送事件，前端通过 `useOrderSocket` hook 接收并更新 UI。这比轮询更高效，延迟从秒级降到毫秒级。"
 
 ### 5.3 扩展：心跳机制
 
@@ -382,7 +382,7 @@ async def websocket_endpoint(websocket: WebSocket, order_id: str):
 
 ---
 
-## 6. 面试高频题
+## 6. 架构复盘高频题
 
 **Q: 事件总线用 Redis pub/sub 还是 Kafka？**
 

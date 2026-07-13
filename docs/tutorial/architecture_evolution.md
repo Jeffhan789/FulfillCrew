@@ -10,7 +10,7 @@
 2. [v2.0 升级总览](#20-升级总览)
 3. [升级决策详解](#3-升级决策详解)
 4. [未来路线图](#4-未来路线图)
-5. [如何向面试官讲述演进故事](#5-如何向面试官讲述演进故事)
+5. [如何向评审者讲述演进故事](#5-如何向评审者讲述演进故事)
 
 ---
 
@@ -65,7 +65,7 @@ ml_models/
 | 维度 | v1.0 | v2.0 | 升级理由 |
 |------|------|------|----------|
 | 前端 | 原生 JS | React 18 + TypeScript + Vite | 组件化、类型安全、工程化 |
-| 前端图表 | 无 | Recharts 6 个 Dashboard | 数据可视化、面试展示价值 |
+| 前端图表 | 无 | Recharts 6 个 Dashboard | 数据可视化、架构复盘展示价值 |
 | 实时通信 | 无 | WebSocket | 实时订单状态推送 |
 | 后端 ORM | 内存字典 | SQLAlchemy 2.0 async + PostgreSQL | 持久化、ACID、可查询 |
 | 数据访问 | 直接操作 dict | Repository 模式 | 抽象、可测试、可替换 |
@@ -115,16 +115,16 @@ Browser → Nginx
 | 方案 | 优势 | 劣势 | 选择 |
 |------|------|------|------|
 | 保持原生 JS | 无构建步骤、简单 | 难以维护、无组件复用 | ❌ |
-| Vue 3 | 学习曲线平缓、中文文档好 | 面试中 React 岗位更多 | ❌ |
+| Vue 3 | 学习曲线平缓、中文文档好 | 当前可视化与组件选型已围绕 React 验证 | ❌ |
 | React 18 + JS | 生态成熟 | 无类型安全 | ❌ |
-| **React 18 + TS** | 类型安全、组件化、面试通用 | 需要构建步骤 | ✅ |
+| **React 18 + TS** | 类型安全、组件化、架构复盘通用 | 需要构建步骤 | ✅ |
 
 **关键设计决策：**
 - **Vite 而不是 CRA**：CRA 已官方弃用，Vite 构建速度快 10 倍以上
 - **无状态管理库**：`useState` + `useMemo` 足够，避免过度工程
 - **Recharts 而不是 D3**：声明式 API 更适合 React，学习成本低
 
-**面试讲述要点：**
+**架构复盘讲述要点：**
 > "v1.0 的前端是原生 JS，维护困难。升级到 React + TypeScript 后，类型系统让接口契约清晰（`OrderResponse`、`WarehouseBid`），6 个 Dashboard 组件可以独立开发和测试。"
 
 ---
@@ -133,7 +133,7 @@ Browser → Nginx
 
 **决策过程：**
 
-> "v1.0 用 Python 字典存储数据，重启后所有数据消失。课程作业可以接受，但面试项目中需要展示持久化能力。"
+> "v1.0 用 Python 字典存储数据，重启后所有数据消失。课程作业可以接受，但架构复盘项目中需要展示持久化能力。"
 
 **考虑的选项：**
 
@@ -163,7 +163,7 @@ v2.0 中抽象为 Repository：
 await product_repo.update_stock(product_id, -item.quantity)
 ```
 
-**面试讲述要点：**
+**架构复盘讲述要点：**
 > "v1.0 用内存字典，适合演示但不适合工程。升级到 PostgreSQL + SQLAlchemy 2.0 async 后，数据有了 ACID 保证。Repository 模式抽象了数据访问层，未来如果要换数据库（如 MongoDB），只需替换 Repository 实现。"
 
 ---
@@ -197,7 +197,7 @@ bids, winner = self.coordinator_agent.request_bids(item_count)
 # 每个 Warehouse Agent 独立计算 bid
 ```
 
-**面试讲述要点：**
+**架构复盘讲述要点：**
 > "v1.0 的仓库选择是硬编码的，v2.0 引入了简化版 Contract Net Protocol。3 个 Warehouse Agent 基于 workload、stock、distance、speed 计算可解释竞价，Coordinator 选择最低 bid。这让代码直接映射到 COMP310 的课程内容，同时也展示了**可解释 AI** 的实践。"
 
 ---
@@ -206,7 +206,7 @@ bids, winner = self.coordinator_agent.request_bids(item_count)
 
 **决策过程：**
 
-> "v1.0 的 ML 模块是纯启发式函数，虽然可运行，但面试中难以展示对神经网络和机器学习的理解。"
+> "v1.0 的 ML 模块是纯启发式函数，虽然可运行，但架构复盘中难以展示对神经网络和机器学习的理解。"
 
 **需求预测的演进：**
 
@@ -256,9 +256,9 @@ class FraudDetector:
 **SHAP 的引入理由：**
 - 不仅是"这个订单有风险"，还要解释"为什么"
 - TreeExplainer 对 XGBoost 的 SHAP 计算是精确的（不是近似）
-- 面试中可以展示对**模型可解释性（XAI）**的理解
+- 架构复盘中可以展示对**模型可解释性（XAI）**的理解
 
-**面试讲述要点：**
+**架构复盘讲述要点：**
 > "v1.0 的 ML 是启发式函数，v2.0 设计了**稳定的推理接口**。Demand Prediction 使用 PyTorch MLP（2 隐藏层 + Dropout），输入 9 维特征。Fraud Detection 使用 XGBoost + SHAP，SHAP 提供基于博弈论的特征贡献解释。每个模型都有 fallback 机制——没有训练数据时系统仍可运行。"
 
 ---
@@ -301,7 +301,7 @@ order_processing_duration = Histogram("fulfillcrew_order_processing_seconds", ..
 - Histogram：追踪处理延迟，自动计算 P50/P95/P99
 - Gauge：追踪最新风险评分
 
-**面试讲述要点：**
+**架构复盘讲述要点：**
 > "v1.0 用 print 调试，无法在生产环境使用。v2.0 引入 structlog 输出 JSON 结构化日志，每个事件包含 order_id 等上下文，便于分布式追踪。同时引入 Prometheus 指标——Counter 追踪订单量、Histogram 追踪处理延迟、Gauge 追踪风险评分。"
 
 ---
@@ -310,7 +310,7 @@ order_processing_duration = Histogram("fulfillcrew_order_processing_seconds", ..
 
 **决策过程：**
 
-> "v1.0 需要手动安装 Python 依赖、Node 依赖，然后分别启动前后端。面试官不可能花 10 分钟看你配环境。"
+> "v1.0 需要手动安装 Python 依赖、Node 依赖，然后分别启动前后端。评审者不可能花 10 分钟看你配环境。"
 
 **Docker 多阶段构建的价值：**
 
@@ -339,7 +339,7 @@ services:
       backend: { condition: service_healthy }
 ```
 
-**面试讲述要点：**
+**架构复盘讲述要点：**
 > "v1.0 需要手动配环境，v2.0 用 Docker Compose 实现**一键启动**。前端用多阶段构建，最终镜像只有 20MB。服务启动有依赖链：postgres → redis → backend → frontend，每个服务只在前置依赖 healthy 后才启动。"
 
 ---
@@ -399,13 +399,13 @@ class Settings:
 
 ---
 
-## 5. 如何向面试官讲述演进故事
+## 5. 如何向评审者讲述演进故事
 
 ### 5.1 2 分钟版本
 
 > "这个项目经历了两个版本。v1.0 是课程作业级的原型——原生 JS 前端、内存存储、纯启发式 ML。v2.0 做了系统性工程化升级：React + TypeScript 前端，PostgreSQL + SQLAlchemy 2.0 async 持久化，6 个 Agent 的 Contract Net Protocol 协调，PyTorch MLP + XGBoost + SHAP 的 ML 层，structlog + Prometheus 的可观测性，Docker Compose 的一键部署。
 >
-> 每个升级都有明确的 trade-off：前端选 React 而不是 Vue 因为面试通用性；数据库选 PostgreSQL 而不是 SQLite 因为要展示 ACID 和并发；ML 模型设计 fallback 机制确保 MVP 可运行。
+> 每个升级都有明确的 trade-off：前端选 React 而不是 Vue 因为架构复盘通用性；数据库选 PostgreSQL 而不是 SQLite 因为要展示 ACID 和并发；ML 模型设计 fallback 机制确保 MVP 可运行。
 >
 > 下一步计划：引入消息队列做异步处理，模型服务化，部署到 Kubernetes。"
 
@@ -440,4 +440,4 @@ class Settings:
 
 ---
 
-> 架构演进故事是面试中最有力的叙事。它展示了你不只是"做了一个项目"，而是**持续思考、迭代优化**的工程师。🚀
+> 架构演进故事是架构复盘中最有力的叙事。它展示了你不只是"做了一个项目"，而是**持续思考、迭代优化**的工程师。🚀

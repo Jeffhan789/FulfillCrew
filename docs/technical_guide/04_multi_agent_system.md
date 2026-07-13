@@ -50,7 +50,7 @@
 - 无超时（假设计算瞬时完成）
 - 隐式拒绝（只有 winner 被记录，其他 Agent 默认未中标）
 
-**面试表达**："我实现了简化的 Contract Net Protocol，核心思想是 Manager 广播任务、Contractor 提交 bid、Manager 按最低 bid 选择 winner。这在单进程内用方法调用模拟，如果部署到分布式环境，可以替换为消息队列（如 RabbitMQ）实现真正的异步通信。"
+**架构复盘表达**："我实现了简化的 Contract Net Protocol，核心思想是 Manager 广播任务、Contractor 提交 bid、Manager 按最低 bid 选择 winner。这在单进程内用方法调用模拟，如果部署到分布式环境，可以替换为消息队列（如 RabbitMQ）实现真正的异步通信。"
 
 ---
 
@@ -311,11 +311,11 @@ decision_log = [
 **价值**：
 - **调试**：追溯订单处理的每一步
 - **审计**：监管要求（如金融电商）
-- **面试**：展示系统设计时考虑了可观测性
+- **架构复盘**：展示系统设计时考虑了可观测性
 
 ---
 
-## 7. 面试高频题
+## 7. 架构复盘高频题
 
 **Q: Contract Net Protocol 与拍卖协议（Auction）有什么区别？**
 

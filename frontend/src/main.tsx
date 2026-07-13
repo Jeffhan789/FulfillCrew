@@ -1,16 +1,17 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { CheckCircle2, Minus, Plus, Search, ShoppingBasket } from "lucide-react";
 import { useOrderSocket } from "./hooks/useOrderSocket";
 import "./styles.css";
 
 // Dashboard components
-import WarehouseBidChart from "./components/WarehouseBidChart";
-import DemandPredictionChart from "./components/DemandPredictionChart";
-import RiskScoreGauge from "./components/RiskScoreGauge";
 import OrderStatusTimeline from "./components/OrderStatusTimeline";
 import SystemHealthPanel from "./components/SystemHealthPanel";
-import ModelEvaluationPanel from "./components/ModelEvaluationPanel";
+
+const WarehouseBidChart = lazy(() => import("./components/WarehouseBidChart"));
+const DemandPredictionChart = lazy(() => import("./components/DemandPredictionChart"));
+const RiskScoreGauge = lazy(() => import("./components/RiskScoreGauge"));
+const ModelEvaluationPanel = lazy(() => import("./components/ModelEvaluationPanel"));
 
 type Product = {
   id: string;
@@ -148,7 +149,8 @@ function App() {
   }
 
   return (
-    <main className="app-shell">
+    <Suspense fallback={<main className="app-shell"><p className="muted">Loading analytics…</p></main>}>
+      <main className="app-shell">
       <section className="top-band">
         <div>
           <p className="eyebrow">COMP315 + COMP310 + ELEC320</p>
@@ -362,7 +364,8 @@ function App() {
           </ol>
         </section>
       ) : null}
-    </main>
+      </main>
+    </Suspense>
   );
 }
 

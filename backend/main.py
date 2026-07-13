@@ -20,7 +20,7 @@ FastAPI Lifecycle:
     3. Request: Pydantic validation → Service → Repository → DB
     4. Response: Serialised via jsonable_encoder
 
-Interview Note:
+Engineering Note:
     Q: Why FastAPI instead of Flask or Django?
     A: FastAPI provides native async/await, automatic OpenAPI docs, and
        Pydantic validation out of the box. It's designed for high-performance

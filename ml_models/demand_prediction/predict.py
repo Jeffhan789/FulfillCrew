@@ -16,7 +16,7 @@ Model Persistence:
     - Load with map_location="cpu" to ensure GPU-trained models work on CPU-only hosts
     - model.eval() disables Dropout and sets batch norm to inference mode
 
-Interview Note:
+Engineering Note:
     Q: Why use torch.no_grad() during inference?
     A: It disables gradient computation, reducing memory usage and speeding up
        forward passes. Gradients are only needed during backpropagation (training).

@@ -37,7 +37,7 @@ FastAPI 早期使用 `@app.on_event("startup")`，但存在几个问题：
 - 在 `yield` 后执行清理（关闭连接池、刷新日志）
 - 支持 async/await，完美配合 asyncio 生态
 
-**面试表达**："我用 `lifespan` 管理应用生命周期，这是 FastAPI 的现代推荐方式，与 ASGI 规范对齐，支持在启动时异步初始化数据库表结构。"
+**架构复盘表达**："我用 `lifespan` 管理应用生命周期，这是 FastAPI 的现代推荐方式，与 ASGI 规范对齐，支持在启动时异步初始化数据库表结构。"
 
 ### 1.2 CORS 动态配置
 
@@ -184,7 +184,7 @@ class OrderRepository:
         return result.scalar_one_or_none()
 ```
 
-**面试表达**："Repository 模式将数据访问逻辑从 Service 层解耦，使 Service 只关注业务编排，不关注 SQL 细节。同时 Repository 依赖 `AsyncSession` 接口，便于单元测试时注入 mock 会话。"
+**架构复盘表达**："Repository 模式将数据访问逻辑从 Service 层解耦，使 Service 只关注业务编排，不关注 SQL 细节。同时 Repository 依赖 `AsyncSession` 接口，便于单元测试时注入 mock 会话。"
 
 ---
 
@@ -257,7 +257,7 @@ async def create_order(request: OrderRequest) -> OrderResponse:
 risk_score = predict_risk(features)  # 阻塞事件循环 ~ 几毫秒
 ```
 
-**改进方案**（面试加分项）：
+**改进方案**（架构复盘加分项）：
 ```python
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
@@ -314,7 +314,7 @@ def test_create_order_success(client: TestClient) -> None:
 
 ---
 
-## 7. 面试高频题
+## 7. 架构复盘高频题
 
 **Q: SQLAlchemy 2.0 相比 1.x 最大的改进是什么？**
 

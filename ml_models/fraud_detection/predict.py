@@ -28,7 +28,7 @@ Model Format:
     - Load with xgb.XGBClassifier().load_model()
     - TreeExplainer requires the trained model object
 
-Interview Note:
+Engineering Note:
     Q: Why SHAP instead of feature importance?
     A: Feature importance (gain/weight) only tells us which features are
        globally important. SHAP tells us the contribution of EACH feature

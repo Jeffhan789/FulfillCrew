@@ -118,7 +118,7 @@ server {
   优势：统一入口、CORS 由 Nginx 处理、SSL 在 Nginx 终止
 ```
 
-**面试表达**："Nginx 作为反向代理统一了前端入口，所有请求走 80 端口。API 和 WebSocket 通过 `proxy_pass` 转发到后端容器。生产环境中 SSL 证书也配置在 Nginx 层（`listen 443 ssl`），后端保持纯 HTTP，简化部署。"
+**架构复盘表达**："Nginx 作为反向代理统一了前端入口，所有请求走 80 端口。API 和 WebSocket 通过 `proxy_pass` 转发到后端容器。生产环境中 SSL 证书也配置在 Nginx 层（`listen 443 ssl`），后端保持纯 HTTP，简化部署。"
 
 ---
 
@@ -245,7 +245,7 @@ REDIS_URL=redis://localhost:6379/0
 
 ## 5. 扩展：CI/CD 流水线
 
-虽然本项目目前未实现完整 CI/CD，但面试中应能描述：
+虽然本项目目前未实现完整 CI/CD，但架构复盘中应能描述：
 
 ```yaml
 # .github/workflows/ci.yml 概念设计
@@ -279,7 +279,7 @@ jobs:
 
 ---
 
-## 6. 面试高频题
+## 6. 架构复盘高频题
 
 **Q: Docker 镜像和容器的区别？**
 

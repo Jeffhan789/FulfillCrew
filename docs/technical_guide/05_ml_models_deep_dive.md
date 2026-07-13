@@ -36,7 +36,7 @@ class DemandMLP(nn.Module):
         return self.net(x).squeeze(-1)  # 去掉最后维度，输出标量
 ```
 
-**面试表达**："这是一个 3 层全连接网络（输入层-隐藏层1-隐藏层2-输出层），输入 9 维特征，经过 ReLU 激活和 Dropout 正则化，输出未来 7 天销量预测。使用 MSELoss 和 Adam 优化器训练。"
+**架构复盘表达**："这是一个 3 层全连接网络（输入层-隐藏层1-隐藏层2-输出层），输入 9 维特征，经过 ReLU 激活和 Dropout 正则化，输出未来 7 天销量预测。使用 MSELoss 和 Adam 优化器训练。"
 
 ### 2.2 特征工程
 
@@ -121,7 +121,7 @@ def predict_demand(product_features: dict) -> int:
     return max(0, round(prediction))
 ```
 
-**面试重点**：
+**架构复盘重点**：
 - `model.eval()`：关闭训练模式特有的随机性（如 Dropout）
 - `torch.no_grad()`：禁用梯度计算，减少内存占用，加速推理
 - `map_location="cpu"`：确保模型可在 CPU 环境加载（容器通常无 GPU）
@@ -143,7 +143,7 @@ XGBoost（eXtreme Gradient Boosting）是梯度提升决策树的优化实现：
 3. 输出：F_T(x) = Σ h_t(x)
 ```
 
-**面试表达**："XGBoost 属于集成学习中的 Boosting 方法，通过串行训练多棵决策树，每棵树拟合前一棵树的残差，逐步减小预测误差。它在 Kaggle 竞赛中长期占据主导地位，因为对小样本、特征混杂的数据集效果极佳。"
+**架构复盘表达**："XGBoost 属于集成学习中的 Boosting 方法，通过串行训练多棵决策树，每棵树拟合前一棵树的残差，逐步减小预测误差。它在 Kaggle 竞赛中长期占据主导地位，因为对小样本、特征混杂的数据集效果极佳。"
 
 ### 3.2 特征设计
 
@@ -176,7 +176,7 @@ shap_values = explainer.shap_values(features)
 # 正值 = 增加风险，负值 = 降低风险
 ```
 
-**面试表达**："SHAP 值回答了一个核心问题：这个特征的取值让预测结果比基准值高了多少或低了多少？比如 'is_new_user=1' 贡献了 +0.15 的风险分数，说明新用户身份是欺诈风险的重要因素。这让模型从黑盒变成了可解释系统，满足金融场景的合规要求。"
+**架构复盘表达**："SHAP 值回答了一个核心问题：这个特征的取值让预测结果比基准值高了多少或低了多少？比如 'is_new_user=1' 贡献了 +0.15 的风险分数，说明新用户身份是欺诈风险的重要因素。这让模型从黑盒变成了可解释系统，满足金融场景的合规要求。"
 
 ### 3.4 回退机制
 
@@ -242,7 +242,7 @@ pickle.dump(clf, open("classifier.pkl", "wb"))
 - **IDF** (Inverse Document Frequency)：log(文档总数 / 包含该词的文档数)
 - **TF-IDF = TF × IDF**：同时衡量"词在本文档的重要性"和"词在所有文档中的区分度"
 
-**面试表达**："TF-IDF 将文本转为数值向量，高 TF-IDF 值表示该词在该文档中频繁出现、但在整个语料中不常见，因此具有很强的类别区分能力。配合 LogisticRegression（Softmax 多分类），实现轻量级文本分类。"
+**架构复盘表达**："TF-IDF 将文本转为数值向量，高 TF-IDF 值表示该词在该文档中频繁出现、但在整个语料中不常见，因此具有很强的类别区分能力。配合 LogisticRegression（Softmax 多分类），实现轻量级文本分类。"
 
 ---
 
@@ -267,11 +267,11 @@ pickle.dump(clf, open("classifier.pkl", "wb"))
 | Recall | TP / (TP + FN)，真实欺诈中有多少被检出 |
 | F1 | 2 × Precision × Recall / (Precision + Recall) |
 
-**面试表达**："欺诈检测中，Precision 和 Recall 往往此消彼长。提高阈值 → Precision↑, Recall↓（更严格，减少误报）；降低阈值 → Precision↓, Recall↑（更宽松，减少漏报）。业务上需权衡：漏报（真欺诈放行）的成本 vs 误报（正常订单拦截）的客户体验成本。"
+**架构复盘表达**："欺诈检测中，Precision 和 Recall 往往此消彼长。提高阈值 → Precision↑, Recall↓（更严格，减少误报）；降低阈值 → Precision↓, Recall↑（更宽松，减少漏报）。业务上需权衡：漏报（真欺诈放行）的成本 vs 误报（正常订单拦截）的客户体验成本。"
 
 ---
 
-## 6. 面试高频题
+## 6. 架构复盘高频题
 
 **Q: 为什么需求预测用 MLP 而不是 XGBoost？**
 

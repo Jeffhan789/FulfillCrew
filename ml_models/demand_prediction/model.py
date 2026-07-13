@@ -27,7 +27,7 @@ Design Decisions:
     - squeeze(-1): Flattens the final (batch, 1) tensor to (batch,) for
       compatibility with MSELoss.
 
-Interview Note:
+Engineering Note:
     Q: Why 64→32 instead of 128→64→32?
     A: Demand prediction with 9 features is a relatively simple regression
        problem. A deeper network would overfit on limited training data.

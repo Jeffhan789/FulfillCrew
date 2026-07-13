@@ -9,7 +9,7 @@ Why Repository Pattern?
     - Flexibility: Swap PostgreSQL for MongoDB without touching services
     - Clarity: Each repository has a single responsibility (CRUD for one entity)
 
-Interview Note:
+Engineering Note:
     Q: What's the difference between Repository and Active Record?
     A: Repository separates data access from the domain model. Active Record
        (e.g., Django ORM) combines them. Repository is better for complex
