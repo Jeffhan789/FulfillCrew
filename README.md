@@ -157,9 +157,6 @@ docs/             System design, ADRs, technical guides, and learning paths
 
 - [System design](docs/system_design.md)
 - [Architecture decision records](docs/adr/README.md)
-- [Technical guide](docs/technical_guide/README.md)
-- [Learning path](docs/learning_path/README.md)
-- [Industry-informed roadmap](docs/roadmap_industry_pain_points.md)
 
 ## 中文说明
 

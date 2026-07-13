@@ -98,10 +98,10 @@ class OrderService:
 
     def _course_trace(self) -> list[AgentDecision]:
         """Return academic module mapping for the frontend course-trace panel.
-        
+
         This is a pedagogical feature that shows which university module
-        contributed to each architectural layer. It helps examiners and
-        reviewers understand the theoretical foundations.
+        contributed to each architectural layer, helping learners connect
+        the running workflow with its theoretical foundations.
         """
         return [
             AgentDecision(

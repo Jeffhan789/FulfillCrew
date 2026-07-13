@@ -10,15 +10,11 @@ Endpoints:
     GET /agents/model-evaluations — Return demo metrics for ML models
 
 Engineering Note:
-    Q: Why expose course mappings as API endpoints instead of documentation?
-    A: The frontend dashboard renders these dynamically, showing a live
-       connection between theory and practice. This makes the project more
-       impressive to examiners who can see the mapping in the UI.
-       
-    Q: Are the model evaluation scores real or demo values?
-    A: The /agents/model-evaluations endpoint returns demo/static values for
-       illustration. Real model evaluations are computed at inference time
-       (see OrderService._model_evaluations) and returned in the OrderResponse.
+    The frontend renders course mappings dynamically so readers can connect
+    concepts with the running modules. Values returned by
+    /agents/model-evaluations are explicitly labelled as demo values; they are
+    not benchmark claims. Runtime model summaries are returned separately in
+    OrderResponse (see OrderService._model_evaluations).
 """
 
 from fastapi import APIRouter

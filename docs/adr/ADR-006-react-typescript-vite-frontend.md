@@ -20,12 +20,12 @@ v1.0 使用 React 17 + JavaScript + Vite。v2.0 升级了 TypeScript 和 Rechart
 
 | 方案 | 优点 | 缺点 | 结论 |
 |------|------|------|------|
-| **React 18 + TS + Vite** | 生态最成熟；Vite 构建极快；TypeScript 类型安全；架构复盘认可度最高 | 需要学 JSX/Hook； bundle 体积比 Vue 稍大 | ✅ 选中 |
-| Vue 3 + Vite | 学习曲线平缓；模板语法直观；性能优秀 | 架构复盘中 React 更常见；学生项目通常用 React | ❌ 非最优选择（架构复盘角度） |
-| Svelte | 编译型；无虚拟 DOM；性能最好 | 生态较小；架构复盘讨论度低；对学生不友好 | ❌ 生态不足 |
+| **React 18 + TS + Vite** | 生态最成熟；Vite 构建极快；TypeScript 类型安全；设计复核认可度最高 | 需要学 JSX/Hook； bundle 体积比 Vue 稍大 | ✅ 选中 |
+| Vue 3 + Vite | 学习曲线平缓；模板语法直观；性能优秀 | 设计复核中 React 更常见；学生项目通常用 React | ❌ 非最优选择（设计复核角度） |
+| Svelte | 编译型；无虚拟 DOM；性能最好 | 生态较小；设计复核讨论度低；对学生不友好 | ❌ 生态不足 |
 | Next.js | SSR/SSG；SEO 友好；全栈能力 | 对 SPA 项目过重；引入服务器端复杂度；课程项目不需要 SSR | ❌ 过重 |
 | Angular | 企业级；TypeScript 原生；完整框架 | 学习曲线极陡；概念过多（RxJS、DI、Module）；对课程项目过重 | ❌ 过重 |
-| 纯 Vanilla JS | 无依赖；完全控制 | 组件化困难；状态管理复杂；架构复盘认可度低 | ❌ 无框架价值 |
+| 纯 Vanilla JS | 无依赖；完全控制 | 组件化困难；状态管理复杂；设计复核认可度低 | ❌ 无框架价值 |
 
 ## 技术细节
 
@@ -52,7 +52,7 @@ TypeScript 的价值：
 1. **API 契约自动校验**：后端 Pydantic 模型和前端 TypeScript 接口可以 1:1 对应
 2. **重构安全**：改名、改接口时编译器会报错，而不是运行时崩溃
 3. **IDE 智能提示**：VS Code 中自动补全 API 字段，减少文档查阅
-4. **架构复盘加分**：TypeScript 是 2024 年前端标配，不用 TS 会被质疑"代码质量"
+4. **维护成本**：类型检查能在构建阶段暴露接口漂移和字段改名问题
 
 ### 为什么用 Vite 而不是 Create React App
 ```javascript
@@ -99,7 +99,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 - **声明式**：类似 React 的 JSX 语法，学习成本低
 - **轻量**：比 D3.js 易用得多，不需要手动操作 SVG
 - **响应式**：自动适配容器大小
-- **架构复盘友好**：Recharts 是 React 图表库的"默认选择"
+- **设计复核友好**：Recharts 是 React 图表库的"默认选择"
 
 ### WebSocket 实时通信
 ```typescript
@@ -168,10 +168,10 @@ server {
 | 前端 bundle 体积 | Vite 的 tree-shaking 和 code-splitting 自动优化；React 18 体积可控 |
 | 实时数据通过 WebSocket 但重连逻辑简单 | 当前是演示场景，不需要企业级重连；如需可用 `reconnecting-websocket` 库 |
 
-## 架构复盘要点
+## 设计复核要点
 
 ### Q1: 为什么用 React 而不是 Vue？
-> "React 的生态系统更大，架构复盘中出现频率更高。对于我们这个需要数据可视化的仪表盘项目，React + Recharts 的组合非常成熟。另外，TypeScript 和 React 的集成比 Vue 更自然（JSX 本身就是 TypeScript 友好的）。"
+> "React 的生态系统更大，设计复核中出现频率更高。对于我们这个需要数据可视化的仪表盘项目，React + Recharts 的组合非常成熟。另外，TypeScript 和 React 的集成比 Vue 更自然（JSX 本身就是 TypeScript 友好的）。"
 
 ### Q2: Vite 和 webpack 有什么区别？
 > "Vite 在开发时使用原生 ES Modules，不需要打包，冷启动几乎是即时的。webpack 需要分析整个依赖图才能启动。Vite 生产构建用 Rollup，tree-shaking 效果更好。对于这个项目，Vite 让开发体验提升了一个数量级。"
@@ -183,7 +183,7 @@ server {
 > "当前使用 React 内置的 `useState` 和 `useEffect`，没有引入 Redux 或 Zustand。原因是：
 1. 状态相对简单（商品列表、购物篮、当前订单）
 2. 不需要跨组件共享复杂状态
-3. 架构复盘中展示'用最少工具解决问题'的能力
+3. 当前状态规模不需要额外状态管理依赖
 如果未来状态变复杂，可以引入 Zustand（轻量）或 Redux Toolkit（规范）。"
 
 ### Q5: Nginx 的 `try_files` 是做什么的？
