@@ -31,6 +31,8 @@ Interview Note:
        you'd also verify model checksums or version metadata.
 """
 
+from pathlib import Path
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 

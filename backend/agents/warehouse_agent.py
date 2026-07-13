@@ -35,7 +35,7 @@ Interview Note:
 
 from dataclasses import dataclass
 
-from backend.database.models import WarehouseBid
+from backend.schemas import WarehouseBid
 
 
 @dataclass

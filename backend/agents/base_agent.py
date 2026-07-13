@@ -23,7 +23,7 @@ Courses Reflected:
 Design Pattern: Template Method (BaseAgent) + Strategy (bidding heuristic)
 """
 
-from backend.database.models import AgentDecision
+from backend.schemas import AgentDecision
 
 
 class BaseAgent:
@@ -48,4 +48,3 @@ class BaseAgent:
         to JSON and sent to the frontend timeline component.
         """
         return AgentDecision(agent=self.name, message=message)
-

@@ -8,7 +8,7 @@ This agent demonstrates the "resource allocation" problem in MAS:
 """
 
 from backend.agents.base_agent import BaseAgent
-from backend.database.models import BasketItem, Product
+from backend.schemas import BasketItem, Product
 
 
 class InventoryAgent(BaseAgent):
@@ -61,4 +61,3 @@ class InventoryAgent(BaseAgent):
         for item in items:
             product = products[item.product_id]
             product.quantity -= item.quantity
-

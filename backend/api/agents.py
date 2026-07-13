@@ -21,6 +21,9 @@ Interview Note:
        illustration. Real model evaluations are computed at inference time
        (see OrderService._model_evaluations) and returned in the OrderResponse.
 """
+
+from fastapi import APIRouter
+
 from backend.schemas import CourseMapping, ModelEvaluation
 
 router = APIRouter(prefix="/agents", tags=["agents"])

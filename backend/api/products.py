@@ -17,6 +17,9 @@ Interview Note:
        with their own lifecycle. A separate endpoint enables product browsing
        without creating an order, and allows different caching strategies.
 """
+
+from fastapi import APIRouter
+
 from backend.schemas import Product
 from backend.services.product_service import ProductService
 

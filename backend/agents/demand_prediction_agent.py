@@ -31,7 +31,7 @@ Interview Note:
 """
 
 from backend.agents.base_agent import BaseAgent
-from backend.database.models import Product
+from backend.schemas import Product
 from ml_models.demand_prediction.predict import predict_demand
 
 
@@ -63,4 +63,3 @@ class DemandPredictionAgent(BaseAgent):
                per product. Aggregation is trivially parallelisable.
         """
         return sum(predict_demand(product.model_dump()) for product in products)
-

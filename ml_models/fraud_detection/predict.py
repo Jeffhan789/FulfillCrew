@@ -48,10 +48,6 @@ Interview Note:
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-import shap
-import xgboost as xgb
-
 from ml_models.fraud_detection.model import FEATURE_COLUMNS, LightweightFraudClassifier
 
 DEFAULT_MODEL_PATH = Path(__file__).parent / "models" / "fraud_xgb.json"
@@ -76,18 +72,28 @@ class FraudDetector:
         self._model_path = Path(model_path)
 
         if self._model_path.exists():
-            self.model: Any = xgb.XGBClassifier()
-            self.model.load_model(str(self._model_path))
-            self.explainer = shap.TreeExplainer(self.model)
-            self._is_xgb = True
+            try:
+                import shap
+                import xgboost as xgb
+
+                self.model: Any = xgb.XGBClassifier()
+                self.model.load_model(str(self._model_path))
+                self.explainer = shap.TreeExplainer(self.model)
+                self._is_xgb = True
+            except (ImportError, OSError, ValueError):
+                self.model = LightweightFraudClassifier()
+                self.explainer = None
+                self._is_xgb = False
         else:
             # Fallback heuristic scorer
             self.model = LightweightFraudClassifier()
             self.explainer = None
             self._is_xgb = False
 
-    def _to_array(self, order_features: dict[str, Any]) -> np.ndarray:
+    def _to_array(self, order_features: dict[str, Any]) -> Any:
         """Convert a feature dict into a NumPy array aligned with FEATURE_COLUMNS."""
+        import numpy as np
+
         return np.array(
             [[float(order_features.get(col, 0.0)) for col in FEATURE_COLUMNS]],
             dtype=float,

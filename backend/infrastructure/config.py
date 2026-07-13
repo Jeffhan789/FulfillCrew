@@ -1,5 +1,3 @@
-"""Centralised configuration for FulfillCrew backend."""
-
 from __future__ import annotations
 
 """Centralised configuration for FulfillCrew backend.
@@ -32,6 +30,7 @@ Interview Note:
        Never commit secrets to Git. The .env.example file shows the
        expected keys without real values.
 """
+import os
 from dataclasses import dataclass
 
 

@@ -39,12 +39,9 @@ Interview Note:
 
 import math
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import numpy as np
-import torch
-
-from ml_models.demand_prediction.model import DemandMLP
 
 
 MODEL_PATH = Path(__file__).parent / "models" / "demand_mlp.pt"
@@ -126,7 +123,7 @@ def _heuristic_fallback(product_features: Dict[str, Any]) -> int:
     return max(1, int(round(output)))
 
 
-def load_model(model_path: Optional[str] = None) -> DemandMLP:
+def load_model(model_path: Optional[str] = None) -> Any:
     """Load a trained DemandMLP from disk.
 
     Args:
@@ -136,6 +133,10 @@ def load_model(model_path: Optional[str] = None) -> DemandMLP:
     Returns:
         An evaluated ``DemandMLP`` instance on CPU.
     """
+    import torch
+
+    from ml_models.demand_prediction.model import DemandMLP
+
     path = Path(model_path) if model_path else MODEL_PATH
     model = DemandMLP(input_dim=9)
     model.load_state_dict(torch.load(path, map_location="cpu"))
@@ -149,21 +150,22 @@ def predict_demand(product_features: Dict[str, Any]) -> int:
     If a trained model exists on disk it is loaded and used; otherwise a
     heuristic fallback is returned so callers never crash.
     """
-    if not MODEL_PATH.exists():
-        return _heuristic_fallback(product_features)
+    if MODEL_PATH.exists():
+        try:
+            import torch
 
-    # Lazy-load model on first successful call (kept in module namespace for reuse)
-    if not hasattr(predict_demand, "_model"):
-        predict_demand._model = load_model(MODEL_PATH)  # type: ignore[attr-defined]
+            if not hasattr(predict_demand, "_model"):
+                predict_demand._model = load_model(MODEL_PATH)  # type: ignore[attr-defined]
+            model = predict_demand._model  # type: ignore[attr-defined]
+            vec = _encode_features(product_features)
+            tensor = torch.from_numpy(vec).unsqueeze(0)
+            with torch.no_grad():
+                pred = model(tensor).item()
+            return max(0, int(round(pred)))
+        except (ImportError, OSError, RuntimeError, ValueError):
+            pass
 
-    model: DemandMLP = predict_demand._model  # type: ignore[attr-defined]
-    vec = _encode_features(product_features)
-    tensor = torch.from_numpy(vec).unsqueeze(0)  # (1, 9)
-
-    with torch.no_grad():
-        pred = model(tensor).item()
-
-    return max(0, int(round(pred)))
+    return _heuristic_fallback(product_features)
 
 
 def predict_batch(products: List[Dict[str, Any]]) -> List[int]:
@@ -174,17 +176,19 @@ def predict_batch(products: List[Dict[str, Any]]) -> List[int]:
     if not products:
         return []
 
-    if not MODEL_PATH.exists():
-        return [_heuristic_fallback(p) for p in products]
+    if MODEL_PATH.exists():
+        try:
+            import torch
 
-    if not hasattr(predict_batch, "_model"):
-        predict_batch._model = load_model(MODEL_PATH)  # type: ignore[attr-defined]
+            if not hasattr(predict_batch, "_model"):
+                predict_batch._model = load_model(MODEL_PATH)  # type: ignore[attr-defined]
+            model = predict_batch._model  # type: ignore[attr-defined]
+            matrix = np.stack([_encode_features(p) for p in products], axis=0)
+            tensor = torch.from_numpy(matrix)
+            with torch.no_grad():
+                preds = model(tensor).numpy()
+            return [max(0, int(round(p))) for p in preds.tolist()]
+        except (ImportError, OSError, RuntimeError, ValueError):
+            pass
 
-    model: DemandMLP = predict_batch._model  # type: ignore[attr-defined]
-    matrix = np.stack([_encode_features(p) for p in products], axis=0)  # (N, 9)
-    tensor = torch.from_numpy(matrix)
-
-    with torch.no_grad():
-        preds = model(tensor).numpy()
-
-    return [max(0, int(round(p))) for p in preds.tolist()]
+    return [_heuristic_fallback(p) for p in products]

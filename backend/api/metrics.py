@@ -36,6 +36,8 @@ Interview Note:
        → triggers a "high latency" alert
 """
 
+from fastapi import APIRouter, Response
+
 router = APIRouter(tags=["metrics"])
 
 try:
