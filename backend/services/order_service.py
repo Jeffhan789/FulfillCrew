@@ -20,7 +20,7 @@ Design Patterns Used:
     - Observer: WebSocket manager pushes real-time updates to frontend
     - Circuit Breaker (implicit): ProductService falls back to JSON if DB fails
 
-Interview Note:
+Engineering Note:
     Q: Why is the pipeline sequential rather than parallel?
     A: Fraud detection MUST run before inventory reservation (security).
        Inventory check MUST run before warehouse bidding (no point bidding
@@ -39,6 +39,7 @@ Interview Note:
 from time import time
 
 from datetime import datetime, timezone
+from uuid import uuid4
 
 from fastapi.encoders import jsonable_encoder
 
@@ -97,10 +98,10 @@ class OrderService:
 
     def _course_trace(self) -> list[AgentDecision]:
         """Return academic module mapping for the frontend course-trace panel.
-        
+
         This is a pedagogical feature that shows which university module
-        contributed to each architectural layer. It helps examiners and
-        interviewers understand the theoretical foundations.
+        contributed to each architectural layer, helping learners connect
+        the running workflow with its theoretical foundations.
         """
         return [
             AgentDecision(
@@ -121,7 +122,7 @@ class OrderService:
         """Generate model evaluation metadata for the frontend dashboard.
         
         This bridges the gap between "running code" and "academic explanation",
-        making it easy to defend the project in a viva or technical interview.
+        making the design traceable during independent technical review.
         """
         return [
             ModelEvaluation(
@@ -162,7 +163,7 @@ class OrderService:
             No exceptions are raised — all error paths return a response with
             an appropriate status (e.g., "rejected_out_of_stock").
             
-        Interview Note:
+        Engineering Note:
             Q: Walk me through what happens when a user clicks "Place Order".
             A: 1. Frontend POSTs to /orders with BasketItem list
                2. FastAPI validates via Pydantic (OrderRequest schema)
@@ -184,7 +185,6 @@ class OrderService:
             order_id=order_id,
             user_id=request.user_id,
             item_count=sum(item.quantity for item in request.items),
-            event="order.created",
         )
         
         # Notify frontend that the order has been received
@@ -232,7 +232,6 @@ class OrderService:
             order_id=order_id,
             risk_score=risk_score_val,
             fraud_status=fraud_status,
-            event="fraud.checked",
         )
         await manager.send_order_update(order_id, {
             "event": "fraud.checked",
@@ -245,62 +244,6 @@ class OrderService:
         })
         # Record fraud score in Prometheus for alerting
         fraud_score.labels(order_id=order_id).set(risk_score_val)
-        start = time()
-        order_id = str(uuid4())
-        logger.info(
-            "order.created",
-            order_id=order_id,
-            user_id=request.user_id,
-            item_count=sum(item.quantity for item in request.items),
-            event="order.created",
-        )
-        await manager.send_order_update(order_id, {
-            "event": "order.created",
-            "order_id": order_id,
-            "data": {
-                "order_status": "pending",
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-            },
-        })
-
-        products = await self.product_service.get_product_map()
-        selected_products = [products[item.product_id] for item in request.items if item.product_id in products]
-        item_count = sum(item.quantity for item in request.items)
-        order_total = round(
-            sum(products[item.product_id].price * item.quantity for item in request.items if item.product_id in products),
-            2,
-        )
-        average_item_price = order_total / item_count if item_count else 0
-        decision_log: list[AgentDecision] = [
-            self.order_agent.log(f"Received order from {request.user_id} with {item_count} item(s).")
-        ]
-
-        risk_score_val, fraud_status = self.fraud_agent.score(
-            {
-                "order_total": order_total,
-                "number_of_items": item_count,
-                "average_item_price": average_item_price,
-                "is_new_user": request.is_new_user,
-                "shipping_distance": request.shipping_distance,
-            }
-        )
-        decision_log.append(self.fraud_agent.log(f"Risk score {risk_score_val:.2f}; status {fraud_status}."))
-        logger.info(
-            "fraud.checked",
-            order_id=order_id,
-            risk_score=risk_score_val,
-            fraud_status=fraud_status,
-            event="fraud.checked",
-        )
-        await manager.send_order_update(order_id, {
-            "event": "fraud.checked",
-            "order_id": order_id,
-            "data": {
-                "risk_score": risk_score_val,
-                "fraud_status": fraud_status,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-            },
-        })
         logger.info(
             "agent_decision",
             order_id=order_id,
@@ -309,7 +252,6 @@ class OrderService:
             risk_score=risk_score_val,
             threshold=0.65,
             decision=fraud_status,
-            event="agent_decision",
         )
         fraud_score.labels(order_id=order_id).set(risk_score_val)
 
@@ -325,7 +267,6 @@ class OrderService:
                 order_id=order_id,
                 stock_available=False,
                 unavailable_items=unavailable,
-                event="inventory.checked",
             )
             await manager.send_order_update(order_id, {
                 "event": "inventory.checked",
@@ -376,7 +317,6 @@ class OrderService:
                 "fulfillment.completed",
                 order_id=order_id,
                 order_status=order_status,
-                event="fulfillment.completed",
             )
             await manager.send_order_update(order_id, {
                 "event": "fulfillment.completed",
@@ -407,7 +347,6 @@ class OrderService:
             "inventory.checked",
             order_id=order_id,
             stock_available=True,
-            event="inventory.checked",
         )
         await manager.send_order_update(order_id, {
             "event": "inventory.checked",
@@ -439,7 +378,6 @@ class OrderService:
                 bid_value=bid.bid,
                 suitability_score=bid.suitability_score,
                 is_winner=(bid.warehouse_id == winner.warehouse_id),
-                event="warehouse.bid",
             )
             warehouse_bids_total.labels(warehouse_id=bid.warehouse_id).inc()
         await manager.send_order_update(order_id, {
@@ -470,7 +408,6 @@ class OrderService:
             decision_type="demand_prediction",
             predicted_demand=predicted_demand,
             restock_recommendation=restock_recommendation,
-            event="agent_decision",
         )
 
         # ───────────────────────────────────────────────
@@ -559,7 +496,6 @@ class OrderService:
             order_id=order_id,
             order_status=order_status,
             selected_warehouse=winner.warehouse_id,
-            event="fulfillment.completed",
         )
         # Final WebSocket push — frontend transitions to "completed" state
         await manager.send_order_update(order_id, {
@@ -611,29 +547,35 @@ class OrderService:
             products: Product map (required if update_stock=True)
             request_items: Basket items (required if update_stock=True)
             
-        Interview Note:
+        Engineering Note:
             Q: Why Repository pattern instead of direct SQLAlchemy calls?
             A: Repositories encapsulate data access logic, making unit testing
                easier (mock the repository) and allowing future DB migrations
                without changing business logic.
         """
-        async with AsyncSessionLocal() as session:
-            order_repo = OrderRepository(session)
-            product_repo = ProductRepository(session)
-            agent_decision_repo = AgentDecisionRepository(session)
-            warehouse_bid_repo = WarehouseBidRepository(session)
+        try:
+            async with AsyncSessionLocal() as session:
+                order_repo = OrderRepository(session)
+                product_repo = ProductRepository(session)
+                agent_decision_repo = AgentDecisionRepository(session)
+                warehouse_bid_repo = WarehouseBidRepository(session)
 
-            await order_repo.create_order(order_orm)
-            await order_repo.add_items(order_orm.order_id, item_orms)
-            for dec in decision_orms:
-                await agent_decision_repo.save(dec)
-            for bid in bid_orms:
-                await warehouse_bid_repo.save(bid)
+                await order_repo.create_order(order_orm)
+                await order_repo.add_items(order_orm.order_id, item_orms)
+                for dec in decision_orms:
+                    await agent_decision_repo.save(dec)
+                for bid in bid_orms:
+                    await warehouse_bid_repo.save(bid)
 
-            # Only decrement stock for approved orders
-            if update_stock and products and request_items:
-                for item in request_items:
-                    if item.product_id in products:
-                        await product_repo.update_stock(item.product_id, -item.quantity)
+                if update_stock and products and request_items:
+                    for item in request_items:
+                        if item.product_id in products:
+                            await product_repo.update_stock(item.product_id, -item.quantity)
 
-            await session.commit()
+                await session.commit()
+        except Exception as exc:
+            logger.warning(
+                "order.persistence_degraded",
+                order_id=order_orm.order_id,
+                error=str(exc),
+            )

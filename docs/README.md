@@ -32,17 +32,17 @@ Explains how the three university modules (COMP315 Cloud Computing, COMP310 Mult
 
 ### `中文项目介绍.md`
 
-A detailed Chinese-language project introduction for students and interviewers. It covers the project origin, the engineering decisions, the agent workflow, the ML model layer, and suggestions for how to extend the project. It is intended for Chinese-speaking GitHub visitors and classroom presentations.
+A detailed Chinese-language project introduction for students and reviewers. It covers the project origin, the engineering decisions, the agent workflow, the ML model layer, and suggestions for how to extend the project. It is intended for Chinese-speaking GitHub visitors and classroom presentations.
 
 ## How to Use This Directory
 
-- **For interviewers:** Read `system_design.md` and `agent_design.md` first to understand the architecture, then `course_mapping.md` to see how coursework is applied.
+- **For reviewers:** Read `system_design.md` and `agent_design.md` first to understand the architecture, then `course_mapping.md` to see how coursework is applied.
 - **For students:** Read `中文项目介绍.md` and `course_mapping.md` to understand the project philosophy, then check the code to see how each concept is implemented.
 - **For deployers:** Read `deployment.md` and the repository root `docker-compose.yml` to understand the containerisation strategy.
 
 ## Contribution Notes
 
-When you add a major new feature (e.g., a new agent, a real trained ML model, a database layer), add a short design note here that explains the decision and the trade-offs. This keeps the repository readable and interview-ready.
+When you add a major new feature (e.g., a new agent, a real trained ML model, a database layer), add a short design note here that explains the decision and the trade-offs. This keeps the repository readable and production-minded.
 
 ---
 
@@ -78,16 +78,12 @@ Docker 与部署指南。引用仓库根目录下的 `Dockerfile` 和 `docker-co
 
 解释三门大学课程（COMP315 云计算、COMP310 多智能体系统、ELEC320 神经网络）如何映射到运行中的系统。本文档是 `/agents/course-map` API 端点和前端课程智能仪表盘的依据。
 
-### `中文项目介绍.md`
-
-面向学生和面试官的详细中文项目介绍。涵盖项目起源、工程决策、智能体工作流、ML 模型层，以及扩展建议。面向中文 GitHub 访问者和课堂展示。
-
 ## 如何使用本目录
 
-- **面试官：** 先阅读 `system_design.md` 和 `agent_design.md` 了解架构，再阅读 `course_mapping.md` 了解课程作业如何落地。
-- **学生：** 先阅读 `中文项目介绍.md` 和 `course_mapping.md` 了解项目理念，再对照代码查看每个概念的具体实现。
+- **开发者：** 先阅读 `system_design.md` 和 `agent_design.md` 了解架构，再阅读 `course_mapping.md` 了解课程知识如何映射到实现。
+- **学习者：** 先阅读 `course_mapping.md`，再对照代码查看每个概念的具体实现。
 - **部署者：** 阅读 `deployment.md` 和仓库根目录的 `docker-compose.yml`，了解容器化策略。
 
 ## 贡献说明
 
-当你添加重大新功能（如新智能体、真实训练后的 ML 模型、数据库层）时，请在此处添加一份简短的设计笔记，说明决策原因和权衡。这能保持仓库的可读性和面试友好性。
+当你添加重大新功能（如新智能体、真实训练后的 ML 模型、数据库层）时，请在此处添加一份简短的设计笔记，说明决策原因和权衡。这能保持仓库的可读性和设计复核友好性。

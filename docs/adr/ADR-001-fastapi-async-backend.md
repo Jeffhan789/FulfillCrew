@@ -77,7 +77,7 @@ FastAPI 的 `async def` 确保：
 | 过度使用 async 导致调试困难 | 严格限制：只有 I/O 边界（HTTP、DB、WebSocket、Redis）使用 async |
 | 第三方库阻塞事件循环 | 使用 `run_in_executor` 将 CPU 密集型任务（如 ML 推理） offload 到线程池 |
 
-## 面试要点（供作者准备）
+## 设计复核要点（供作者准备）
 
 ### Q1: 为什么选 FastAPI 而不是 Flask？
 > "Flask 是同步 WSGI 框架，在高并发场景下需要 gunicorn + 多进程。FastAPI 原生基于 ASGI，支持 async/await，单进程即可处理大量并发连接。对于我们的多智能体系统，每个订单要经历 6 个智能体步骤，async 可以确保一个订单在等待 ML 推理或 DB 写入时，事件循环能处理其他请求。"

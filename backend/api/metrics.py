@@ -17,7 +17,7 @@ Graceful Degradation:
     provided so the application never crashes. This is useful during
     development or in resource-constrained environments.
 
-Interview Note:
+Engineering Note:
     Q: Why Prometheus instead of logging for metrics?
     A: Logs are for debugging individual events. Metrics are for aggregating
        system behaviour over time (e.g., "99th percentile latency"). Prometheus
@@ -35,6 +35,8 @@ Interview Note:
        - histogram_quantile(0.99, rate(fulfillcrew_order_processing_seconds_bucket[5m])) > 2
        → triggers a "high latency" alert
 """
+
+from fastapi import APIRouter, Response
 
 router = APIRouter(tags=["metrics"])
 

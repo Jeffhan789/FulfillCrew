@@ -19,7 +19,7 @@ Status Logic:
     - "degraded": ONE or more checks fail → trigger alert, but keep serving
       (fallback to JSON products and heuristic models still works)
 
-Interview Note:
+Engineering Note:
     Q: What's the difference between /health and /ready in Kubernetes?
     A: /health (liveness) tells K8s whether to restart the container.
        /ready (readiness) tells K8s whether to route traffic to the pod.
@@ -30,6 +30,8 @@ Interview Note:
        expensive and slow. File existence is a cheap proxy. In production
        you'd also verify model checksums or version metadata.
 """
+
+from pathlib import Path
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession

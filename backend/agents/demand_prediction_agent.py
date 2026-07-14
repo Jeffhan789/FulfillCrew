@@ -18,7 +18,7 @@ MLP Architecture (see ml_models/demand_prediction/model.py):
                   ↓
     Output: Linear(32 → 1)  [scalar regression]
 
-Interview Note:
+Engineering Note:
     Q: Why MLP instead of LSTM/Transformer for demand prediction?
     A: MLP is simpler, faster to train, and works well with tabular features.
        For true time-series forecasting we would use LSTM or Prophet, but
@@ -31,7 +31,7 @@ Interview Note:
 """
 
 from backend.agents.base_agent import BaseAgent
-from backend.database.models import Product
+from backend.schemas import Product
 from ml_models.demand_prediction.predict import predict_demand
 
 
@@ -56,11 +56,10 @@ class DemandPredictionAgent(BaseAgent):
         Returns:
             Integer sum of predicted demand for each product.
             
-        Interview Note:
+        Engineering Note:
             Q: Why sum individual predictions instead of predicting basket-level demand?
             A: Basket-level demand is harder to model due to sparse combinations.
                Product-level predictions are more generalisable and can be cached
                per product. Aggregation is trivially parallelisable.
         """
         return sum(predict_demand(product.model_dump()) for product in products)
-

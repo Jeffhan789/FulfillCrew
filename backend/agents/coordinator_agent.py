@@ -8,7 +8,7 @@ CNP is a multi-agent interaction protocol where:
 
 This is the core COMP310 Multi-Agent Systems concept demonstrated in FulfillCrew.
 
-Interview Questions & Answers:
+Architecture Questions & Answers:
     Q: Why CNP instead of centralized optimisation?
     A: CNP is decentralised, fault-tolerant, and mirrors real-world logistics
        where each warehouse has private cost functions.
@@ -20,7 +20,7 @@ Interview Questions & Answers:
 
 from backend.agents.base_agent import BaseAgent
 from backend.agents.warehouse_agent import WarehouseAgent
-from backend.database.models import WarehouseBid
+from backend.schemas import WarehouseBid
 
 
 class CoordinatorAgent(BaseAgent):
@@ -59,7 +59,7 @@ class CoordinatorAgent(BaseAgent):
             A tuple of (all_bids, winning_bid) where the winner is selected
             by the lowest bid value (lower = better).
             
-        Interview Note:
+        Engineering Note:
             Q: Why min() with key=lambda bid: bid.bid?
             A: This is the "award" step of CNP. The scoring function is
                encapsulated inside each WarehouseAgent.bid() call, so the
@@ -68,22 +68,3 @@ class CoordinatorAgent(BaseAgent):
         bids = [warehouse.bid(item_count) for warehouse in self.warehouses]
         winner = min(bids, key=lambda bid: bid.bid)
         return bids, winner
-from backend.agents.warehouse_agent import WarehouseAgent
-from backend.database.models import WarehouseBid
-
-
-class CoordinatorAgent(BaseAgent):
-    name = "Coordinator Agent"
-
-    def __init__(self) -> None:
-        self.warehouses = [
-            WarehouseAgent("Warehouse A", "London", current_workload=5, stock_level=80, processing_speed=3.0, distance=8),
-            WarehouseAgent("Warehouse B", "Birmingham", current_workload=2, stock_level=55, processing_speed=2.7, distance=22),
-            WarehouseAgent("Warehouse C", "Manchester", current_workload=1, stock_level=40, processing_speed=2.1, distance=35),
-        ]
-
-    def request_bids(self, item_count: int) -> tuple[list[WarehouseBid], WarehouseBid]:
-        bids = [warehouse.bid(item_count) for warehouse in self.warehouses]
-        winner = min(bids, key=lambda bid: bid.bid)
-        return bids, winner
-

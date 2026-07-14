@@ -19,7 +19,7 @@
  *   3. Hook parses JSON → updates React state → triggers re-render
  *   4. Component unmounts → hook closes connection
  *
- * Interview Note:
+ * Engineering Note:
  *   Q: Why a custom hook instead of putting WebSocket logic in the component?
  *   A: Separation of concerns. The component renders UI; the hook manages
  *      side effects and state. This makes both easier to test and reuse.

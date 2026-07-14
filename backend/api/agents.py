@@ -2,25 +2,23 @@
 
 This module is unique to FulfillCrew as an academic project. It provides
 endpoints that explicitly map the implementation to the three university
-modules, making it easy to demonstrate course relevance during a viva or
-technical interview.
+modules, making it easy to trace course concepts during technical review.
 
 Endpoints:
     GET /agents           — List all agent names (for discovery)
     GET /agents/course-map — Map implementation to COMP315/COMP310/ELEC320
     GET /agents/model-evaluations — Return demo metrics for ML models
 
-Interview Note:
-    Q: Why expose course mappings as API endpoints instead of documentation?
-    A: The frontend dashboard renders these dynamically, showing a live
-       connection between theory and practice. This makes the project more
-       impressive to examiners who can see the mapping in the UI.
-       
-    Q: Are the model evaluation scores real or demo values?
-    A: The /agents/model-evaluations endpoint returns demo/static values for
-       illustration. Real model evaluations are computed at inference time
-       (see OrderService._model_evaluations) and returned in the OrderResponse.
+Engineering Note:
+    The frontend renders course mappings dynamically so readers can connect
+    concepts with the running modules. Values returned by
+    /agents/model-evaluations are explicitly labelled as demo values; they are
+    not benchmark claims. Runtime model summaries are returned separately in
+    OrderResponse (see OrderService._model_evaluations).
 """
+
+from fastapi import APIRouter
+
 from backend.schemas import CourseMapping, ModelEvaluation
 
 router = APIRouter(prefix="/agents", tags=["agents"])

@@ -15,7 +15,7 @@ Data Flow:
     3. FastAPI startup (init_db) seeds PostgreSQL from JSON if tables are empty
     4. Runtime reads prefer PostgreSQL, fall back to JSON on DB errors
 
-Interview Note:
+Engineering Note:
     Q: Why JSON fallback instead of just failing when the DB is down?
     A: Graceful degradation. In a demo/school project, having a working
        frontend is more important than perfect persistence. The JSON
@@ -28,6 +28,7 @@ Interview Note:
        3. Event-driven cache invalidation when stock changes
        4. Full-text search (PostgreSQL tsvector or Elasticsearch) for product discovery
 """
+import json
 from pathlib import Path
 
 from backend.database.engine import AsyncSessionLocal
@@ -37,8 +38,17 @@ from backend.schemas import Product
 
 
 class ProductService:
-    def __init__(self) -> None:
-        self._fallback_products = self._load_products_from_json()
+    def __init__(self, products: dict[str, Product] | None = None) -> None:
+        self._fallback_products = products or self._load_products_from_json()
+
+    @property
+    def products(self) -> dict[str, Product]:
+        """Expose the in-memory catalogue used by the graceful fallback path."""
+        return self._fallback_products
+
+    @products.setter
+    def products(self, products: dict[str, Product]) -> None:
+        self._fallback_products = products
 
     def _load_products_from_json(self) -> dict[str, Product]:
         repo_root = Path(__file__).resolve().parents[2]

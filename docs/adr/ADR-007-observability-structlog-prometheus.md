@@ -8,7 +8,7 @@ v1.0 使用 Python 标准库 `logging`，输出格式不统一，难以解析和
 - 结构化日志（JSON 格式），便于日志聚合（ELK / Loki）
 - 应用指标（订单量、处理延迟、欺诈评分、竞价统计）
 - 健康检查端点，用于 Docker 和 K8s 探针
-- 面试中展示"可观测性（Observability）"意识
+- 让运行状态能够被机器采集、查询和诊断
 
 ## 决策
 采用三件套可观测性方案：
@@ -23,14 +23,14 @@ v1.0 使用 Python 标准库 `logging`，输出格式不统一，难以解析和
 |------|------|------|------|
 | **structlog** | 原生 JSON 输出；与 stdlib logging 兼容；Python 社区标准 | 需要额外依赖 | ✅ 选中 |
 | Python stdlib logging | 内置；无需依赖 | 结构化需手动格式化；配置复杂 | ❌ 不满足结构化需求 |
-| loguru | 现代化 API；自动结构化 | 与 stdlib 不兼容；面试知名度较低 | ❌ 生态不够 |
+| loguru | 现代化 API；自动结构化 | 与 stdlib 不兼容；设计复核知名度较低 | ❌ 生态不够 |
 | ELK 全家桶 | 完整日志平台 | 需要额外部署 ElasticSearch + Logstash + Kibana；过重 | ❌ 过重（仅采集端） |
 
 ### 指标方案
 | 方案 | 优点 | 缺点 | 结论 |
 |------|------|------|------|
 | **Prometheus Client** | 云原生标准；易集成；Docker 生态支持 | 需要额外服务（Prometheus 服务器）采集 | ✅ 选中（仅客户端） |
-| StatsD | 轻量；推模式 | 需额外 StatsD 服务；面试知名度下降 | ❌ 非云原生标准 |
+| StatsD | 轻量；推模式 | 需额外 StatsD 服务；设计复核知名度下降 | ❌ 非云原生标准 |
 | 自定义内存计数器 | 无依赖 | 非标准；无法对接现有监控体系 | ❌ 不可扩展 |
 
 ## 技术细节
@@ -136,7 +136,7 @@ async def create_order(self, request):
 ```
 
 ### 为什么定义这些指标？
-| 指标 | 类型 | 用途 | 面试说明 |
+| 指标 | 类型 | 用途 | 设计复核说明 |
 |------|------|------|----------|
 | `orders_total` | Counter | 监控各状态订单量 | "用 Counter 因为订单量只增不减" |
 | `order_processing_duration` | Histogram | 监控 P50/P95/P99 延迟 | "Histogram 自动分桶，Prometheus 可以计算 quantile" |
@@ -187,12 +187,12 @@ Prometheus 服务器通过轮询 `/metrics` 抓取指标，存储在 TSDB 中，
 
 | 风险 | 缓解措施 |
 |------|----------|
-| Prometheus 服务器未部署，指标无处展示 | 指标客户端已就绪，面试时可说明"已预留 Prometheus + Grafana 集成路径" |
+| Prometheus 服务器未部署，指标不会被持久采集 | 当前仅提供 `/metrics`；共享部署需连接 Prometheus 与可视化/告警后端 |
 | structlog JSON 输出在开发环境可读性差 | 开发环境可通过环境变量切换为纯文本格式（未实现，但架构支持） |
 | 指标过多影响性能 | 当前指标都是轻量操作（内存计数器），开销可忽略 |
 | 健康检查中的模型文件检查过于简单 | 当前仅检查文件存在性；未来可扩展为实际加载验证 |
 
-## 面试要点
+## 设计复核要点
 
 ### Q1: 什么是结构化日志？为什么不用 printf 风格？
 > "结构化日志以 JSON 等机器可读格式输出，每个字段有明确的键。传统 printf 风格如'Order 123 created by user 456' 需要正则解析才能提取 order_id 和 user_id。结构化日志可以直接被 ELK/Loki 索引，支持精确查询如 `order_id=123`。structlog 让我们用 Python 关键字参数写日志，自动输出 JSON。"
@@ -201,7 +201,7 @@ Prometheus 服务器通过轮询 `/metrics` 抓取指标，存储在 TSDB 中，
 > "Counter 是只增不减的累计值，如订单总数。Histogram 是分布统计，记录值落在哪个桶里，如请求延迟的 P50/P95。Gauge 是可增可减的瞬时值，如当前内存使用量或最新的欺诈评分。选择正确的类型让 Prometheus 能正确计算聚合。"
 
 ### Q3: 健康检查和存活检查（liveness）有什么区别？
-> "健康检查是业务层面的：数据库、缓存、模型文件是否就绪。存活检查是系统层面的：进程是否还在运行。在 Kubernetes 中，livenessProbe 失败会重启容器，readinessProbe 失败只是将容器从 Service 端点列表移除。我们的 `/health` 同时服务于两者，但面试中可以区分讨论。"
+> "健康检查是业务层面的：数据库、缓存、模型文件是否就绪。存活检查是系统层面的：进程是否还在运行。在 Kubernetes 中，livenessProbe 失败会重启容器，readinessProbe 失败只是将容器从 Service 端点列表移除。我们的 `/health` 同时服务于两者，但设计复核中可以区分讨论。"
 
 ### Q4: 如果 Prometheus 挂了，应用会受影响吗？
 > "不会。Prometheus 是拉模式（pull）采集，应用只是暴露一个 `/metrics` 端点，被动等待被采集。即使 Prometheus 服务器不可用，应用内存中的计数器仍然累计，恢复后可以获取历史数据。这与推模式（如 StatsD）不同，推模式需要网络连接才能上报。"

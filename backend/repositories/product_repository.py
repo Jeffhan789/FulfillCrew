@@ -10,7 +10,7 @@ Operations:
     - update_stock: Atomic quantity adjustment (used during order fulfillment)
     - save: Insert a new product
 
-Interview Note:
+Engineering Note:
     Q: Why does update_stock take a delta instead of an absolute value?
     A: Delta is safer for concurrent updates. If two orders decrement stock
        simultaneously, absolute updates would overwrite each other (last-write
@@ -21,6 +21,7 @@ Interview Note:
        database query pagination (LIMIT/OFFSET or cursor-based) for large
        catalogues. Consider read replicas for read-heavy workloads.
 """
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database.models import ProductORM

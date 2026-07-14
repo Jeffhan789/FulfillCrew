@@ -9,7 +9,7 @@ Why Repository Pattern?
     - Flexibility: Swap PostgreSQL for MongoDB without touching services
     - Clarity: Each repository has a single responsibility (CRUD for one entity)
 
-Interview Note:
+Engineering Note:
     Q: What's the difference between Repository and Active Record?
     A: Repository separates data access from the domain model. Active Record
        (e.g., Django ORM) combines them. Repository is better for complex
@@ -78,54 +78,6 @@ class OrderRepository:
 
     async def update_order_status(self, order_id: str, status: str, selected_warehouse: str | None) -> None:
         """Update the status and selected warehouse for an order."""
-        order = await self.get_by_id(order_id)
-        if order is not None:
-            order.order_status = status
-            order.selected_warehouse = selected_warehouse
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
-
-from backend.database.models import AgentDecisionORM, OrderItemORM, OrderORM, WarehouseBidORM
-
-
-class OrderRepository:
-    def __init__(self, session: AsyncSession) -> None:
-        self.session = session
-
-    async def create_order(self, order: OrderORM) -> OrderORM:
-        self.session.add(order)
-        await self.session.flush()
-        return order
-
-    async def get_by_id(self, order_id: str) -> OrderORM | None:
-        result = await self.session.execute(
-            select(OrderORM)
-            .where(OrderORM.order_id == order_id)
-            .options(
-                selectinload(OrderORM.items),
-                selectinload(OrderORM.decisions),
-                selectinload(OrderORM.bids),
-            )
-        )
-        return result.scalar_one_or_none()
-
-    async def add_items(self, order_id: str, items: list[OrderItemORM]) -> None:
-        for item in items:
-            item.order_id = order_id
-            self.session.add(item)
-
-    async def add_decisions(self, order_id: str, decisions: list[AgentDecisionORM]) -> None:
-        for decision in decisions:
-            decision.order_id = order_id
-            self.session.add(decision)
-
-    async def add_bids(self, order_id: str, bids: list[WarehouseBidORM]) -> None:
-        for bid in bids:
-            bid.order_id = order_id
-            self.session.add(bid)
-
-    async def update_order_status(self, order_id: str, status: str, selected_warehouse: str | None) -> None:
         order = await self.get_by_id(order_id)
         if order is not None:
             order.order_status = status

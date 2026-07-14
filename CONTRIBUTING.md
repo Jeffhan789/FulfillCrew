@@ -6,7 +6,7 @@
 
 ### 报告 Bug
 
-如果您发现了 Bug，请通过 [GitHub Issues](../../issues) 提交，并尽量包含以下信息：
+如果您发现了 Bug，请通过 [GitHub Issues](https://github.com/Jeffhan789/FulfillCrew/issues) 提交，并尽量包含以下信息：
 
 - 问题的清晰描述
 - 复现步骤
@@ -81,4 +81,4 @@ cd frontend && npm test
 
 ## 许可
 
-通过提交代码，您同意您的贡献将在项目相同的 [LICENSE](../LICENSE) 下发布。
+通过提交代码，您同意您的贡献将在项目相同的 [LICENSE](LICENSE) 下发布。

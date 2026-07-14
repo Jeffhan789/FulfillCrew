@@ -13,7 +13,7 @@ Schema Organisation:
     - AgentDecision / WarehouseBid: MAS audit trail
     - ModelEvaluation / CourseMapping: Academic metadata
 
-Interview Note:
+Engineering Note:
     Q: What's the difference between Pydantic and dataclasses?
     A: Pydantic validates and coerces data at construction time. Dataclasses
        are just syntactic sugar for __init__ and don't validate types.

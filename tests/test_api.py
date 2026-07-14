@@ -11,7 +11,14 @@ def client() -> TestClient:
 def test_health_check(client: TestClient) -> None:
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    payload = response.json()
+    assert payload["status"] in {"healthy", "degraded"}
+    assert set(payload["checks"]) == {
+        "database",
+        "redis",
+        "demand_model",
+        "fraud_model",
+    }
 
 
 def test_list_products(client: TestClient) -> None:

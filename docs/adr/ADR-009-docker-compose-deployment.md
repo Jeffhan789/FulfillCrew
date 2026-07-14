@@ -4,11 +4,11 @@
 Accepted — v2.0 已实施（v1.0 已使用 Docker）
 
 ## 背景
-项目需要展示"云计算"能力，要求：
+项目需要一套可复现的多服务运行环境，要求：
 - 一键启动完整系统（前端 + 后端 + 数据库 + 缓存）
 - 开发环境支持热重载
 - 生产环境支持健康检查、自动重启
-- 面试中能解释容器化、网络、反向代理等概念
+- 清楚记录容器化、网络和反向代理边界
 
 ## 决策
 采用 **Docker Compose** 编排多服务容器，包含：
@@ -17,21 +17,21 @@ Accepted — v2.0 已实施（v1.0 已使用 Docker）
 - FastAPI 后端（Uvicorn）
 - Nginx 前端（React SPA + 反向代理）
 
-提供两个 Compose 文件：`docker-compose.yml`（生产）和 `docker-compose.dev.yml`（开发）。
+提供两个 Compose 文件：`docker-compose.yml`（本地/单主机）和 `docker-compose.dev.yml`（开发热重载）。
 
 ## 考虑方案
 
 | 方案 | 优点 | 缺点 | 结论 |
 |------|------|------|------|
-| **Docker Compose** | 简单；学习曲线低；适合开发和小型部署；面试标准答案 | 单主机；无自动扩缩容；不是生产编排工具 | ✅ 选中（课程项目） |
+| **Docker Compose** | 简单；学习曲线低；适合开发和小型部署；设计复核选择理由 | 单主机；无自动扩缩容；不是生产编排工具 | ✅ 选中（课程项目） |
 | Kubernetes | 云原生标准；自动扩缩容；自愈 | 学习曲线极陡；需要 K8s 集群；对学生过重 | ❌ 过重 |
 | Docker Swarm | 原生 Docker 编排；比 K8s 简单 | 生态衰退；被 Compose 和 K8s 挤压 | ❌ 生态衰退 |
 | 裸机部署 | 无容器开销；直接控制 | 环境不一致；依赖冲突；无法一键复现 | ❌ 不满足云计算要求 |
-| 云厂商 PaaS | 托管；自动运维 | 锁定厂商；面试中无法展示底层理解 | ❌ 无法展示技能 |
+| 云厂商 PaaS | 托管；自动运维 | 绑定供应商，且无法离线复现完整服务拓扑 | ❌ 当前不采用 |
 
 ## 技术细节
 
-### 生产编排 (`docker-compose.yml`)
+### 本地/单主机编排 (`docker-compose.yml`)
 ```yaml
 services:
   postgres:
@@ -174,18 +174,18 @@ backend:
 
 | 风险 | 缓解措施 |
 |------|----------|
-| Docker Compose 不适合生产级多主机部署 | 面试中明确说明"这是课程项目的容器化展示，生产环境需 K8s 或云托管" |
+| Docker Compose 不适合生产级多主机部署 | README 明确限定为本地/单主机；共享生产部署需另选编排平台 |
 | 密码硬编码在 Compose 文件中 | 开发环境可接受；生产环境应使用 Docker Secrets 或环境变量注入 |
 | 卷数据在容器删除时可能丢失 | `postgres-data` 使用命名卷，数据持久化到宿主机 |
 | 前端 `try_files` 配置不当导致 404 | 已配置 `try_files $uri $uri/ /index.html` 支持 React Router |
 
-## 面试要点
+## 设计复核要点
 
 ### Q1: Docker 和 Docker Compose 有什么区别？
 > "Docker 是容器运行时，管理单个容器。Docker Compose 是编排工具，用一个 YAML 文件定义多个服务、网络、卷，一键启动整个系统。比如我们的项目有 4 个服务（frontend, backend, postgres, redis），用 `docker compose up` 可以一次性启动，并自动配置网络连接。"
 
 ### Q2: 多阶段构建（Multi-stage）的好处是什么？
-> "多阶段构建将编译环境和运行环境分离。比如后端需要 gcc 编译某些 Python 包，但运行时不需 gcc。通过多阶段构建，最终镜像只有运行所需的内容，体积更小、攻击面更小。我们的后端镜像从约 500MB 缩减到约 200MB。"
+> "多阶段构建将编译环境和运行环境分离。最终镜像只包含运行所需内容，可减少体积和攻击面；具体大小应由发布流水线持续测量。"
 
 ### Q3: `depends_on` 的 `condition: service_healthy` 是做什么的？
 > "默认的 `depends_on` 只等待容器进程启动，但此时服务可能还没准备好（比如 PostgreSQL 正在初始化）。`condition: service_healthy` 会等待容器的 HEALTHCHECK 通过，确保依赖真正就绪。在我们的编排中，backend 会等待 postgres 和 redis 都健康后才启动。"
@@ -201,10 +201,10 @@ backend:
 1. `test` 阶段：运行 pytest 和 Node.js 测试
 2. `build` 阶段：构建前后端 Docker 镜像，推送到 Docker Hub
 3. `deploy` 阶段：在目标服务器上 `docker compose pull && docker compose up -d`
-面试中展示对完整 DevOps 流程的理解。"
+当前 CI 已覆盖测试与镜像构建；镜像发布和部署仍需独立的凭据、审批与回滚设计。"
 
 ## 相关文件
-- `docker-compose.yml` — 生产编排
+- `docker-compose.yml` — 本地/单主机编排
 - `docker-compose.dev.yml` — 开发编排
 - `Dockerfile` — 后端多阶段构建
 - `frontend/Dockerfile` — 前端多阶段构建

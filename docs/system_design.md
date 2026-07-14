@@ -8,7 +8,7 @@ React Frontend
     -> Cleaned Product Data
 ```
 
-The first implementation keeps data in memory so that the portfolio demo remains easy to run. The next natural upgrade is to replace the in-memory product store with SQLite or PostgreSQL.
+The first implementation keeps data in memory so that the open-source project demo remains easy to run. The next natural upgrade is to replace the in-memory product store with SQLite or PostgreSQL.
 
 ## Components
 
@@ -39,7 +39,7 @@ React 前端
     -> 清洗后的商品数据
 ```
 
-第一版实现将数据保留在内存中，确保作品集演示易于运行。下一步自然升级是将内存中的商品存储替换为 SQLite 或 PostgreSQL。
+第一版实现将数据保留在内存中，确保参考实现演示易于运行。下一步自然升级是将内存中的商品存储替换为 SQLite 或 PostgreSQL。
 
 ## 组件
 

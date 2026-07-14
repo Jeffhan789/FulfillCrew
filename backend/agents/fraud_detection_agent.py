@@ -15,7 +15,7 @@ Model Architecture (ELEC320):
     - Fallback: LightweightFraudClassifier (heuristic logistic regression) if
       no trained model is on disk.
 
-Interview Note:
+Engineering Note:
     Q: Why 0.65 as the threshold?
     A: It's a business decision balancing precision and recall. In a real
        system you would tune this on a validation set using ROC-AUC analysis.
@@ -54,7 +54,7 @@ class FraudDetectionAgent(BaseAgent):
         Returns:
             (risk_score, status) where status is "approved" or "review_required".
             
-        Interview Note:
+        Engineering Note:
             Q: What features are most important for fraud detection?
             A: SHAP analysis (from evaluate.py) shows that order_total,
                is_new_user, and orders_in_last_hour are typically the top

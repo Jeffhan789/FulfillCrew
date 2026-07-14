@@ -22,7 +22,7 @@ SHAP Explainability (see predict.py):
     into contributions from each feature. This answers "why was this order
     flagged?" — critical for regulatory compliance and user trust.
 
-Interview Note:
+Engineering Note:
     Q: Why 0.65 as the threshold?
     A: It balances precision (minimising false alarms) and recall (catching
        real fraud). In practice, you'd tune this using a ROC curve and

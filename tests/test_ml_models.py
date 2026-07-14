@@ -1,4 +1,4 @@
-from ml_models.demand_prediction.model import LightweightDemandMLP
+import pytest
 from ml_models.demand_prediction.predict import predict_demand
 from ml_models.fraud_detection.model import LightweightFraudClassifier
 from ml_models.fraud_detection.predict import predict_risk
@@ -8,19 +8,21 @@ from ml_models.product_category_classifier.predict import predict_category
 
 # Demand Prediction Tests
 
-def test_demand_mlp_returns_positive_integer() -> None:
-    model = LightweightDemandMLP()
-    result = model.predict([50.0, 10, 4.0, 1.0, 0.5])
-    assert isinstance(result, int)
-    assert result >= 1
+def test_demand_mlp_returns_one_value_per_sample() -> None:
+    torch = pytest.importorskip("torch")
+    from ml_models.demand_prediction.model import DemandMLP
+
+    model = DemandMLP(input_dim=9).eval()
+    result = model(torch.zeros(2, 9))
+    assert result.shape == (2,)
 
 
-def test_demand_prediction_higher_price_different_result() -> None:
-    model = LightweightDemandMLP()
-    low = model.predict([0.0, 0, 0.0, 0.0, 0.0])
-    high = model.predict([500.0, 200, 5.0, 1.0, 1.0])
-    assert low != high
-    assert low < high
+def test_demand_mlp_has_trainable_parameters() -> None:
+    pytest.importorskip("torch")
+    from ml_models.demand_prediction.model import DemandMLP
+
+    model = DemandMLP(input_dim=9)
+    assert sum(parameter.numel() for parameter in model.parameters()) > 0
 
 
 def test_demand_predict_with_electronics() -> None:

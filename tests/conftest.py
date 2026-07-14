@@ -1,5 +1,5 @@
 import pytest
-from backend.database.models import BasketItem, OrderRequest, Product
+from backend.schemas import BasketItem, OrderRequest, Product
 from backend.services.product_service import ProductService
 from backend.services.order_service import OrderService
 

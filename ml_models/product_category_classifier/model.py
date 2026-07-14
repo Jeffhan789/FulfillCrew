@@ -17,7 +17,7 @@ would be replaced by:
     - Naive Bayes classifier
     - BERT fine-tuning for semantic understanding
 
-Interview Note:
+Engineering Note:
     Q: Why default to "electronics"?
     A: Electronics is the most common category in the dataset. This is a
        simple form of prior probability — P(electronics) > P(books) in

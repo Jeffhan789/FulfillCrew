@@ -19,7 +19,7 @@ The weights (2.0, 0.8, 0.15, 1.1) are hand-tuned heuristics. In a real system
 you would learn these from historical data (e.g., reinforcement learning or
 genetic algorithms) to minimise actual delivery costs.
 
-Interview Note:
+Engineering Note:
     Q: Why is lower bid better?
     A: The bid represents a "cost score". Lower cost = more attractive warehouse.
     
@@ -35,7 +35,7 @@ Interview Note:
 
 from dataclasses import dataclass
 
-from backend.database.models import WarehouseBid
+from backend.schemas import WarehouseBid
 
 
 @dataclass

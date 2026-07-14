@@ -1,5 +1,3 @@
-"""Centralised configuration for FulfillCrew backend."""
-
 from __future__ import annotations
 
 """Centralised configuration for FulfillCrew backend.
@@ -20,7 +18,7 @@ Environment Variables:
     BACKEND_PORT      → HTTP server port
     CORS_ORIGINS      → Comma-separated allowed origins
 
-Interview Note:
+Engineering Note:
     Q: Why frozen dataclass instead of a dict or global variables?
     A: Immutable dataclasses prevent accidental mutation at runtime.
        Type checkers (mypy, pyright) can verify usage. The property
@@ -32,6 +30,7 @@ Interview Note:
        Never commit secrets to Git. The .env.example file shows the
        expected keys without real values.
 """
+import os
 from dataclasses import dataclass
 
 

@@ -8,7 +8,7 @@ v1.0 中，服务层直接操作内存字典，数据访问与业务逻辑高度
 - 隔离 ORM 细节，让业务层不依赖 SQLAlchemy
 - 便于单元测试（可以 mock Repository 而不需要 mock 整个 DB）
 - 支持未来切换数据库（如从 PostgreSQL 到 MySQL 或 MongoDB）
-- 让面试者能清晰解释"分层架构"
+- 让设计复核者能清晰解释"分层架构"
 
 ## 决策
 采用 **Repository 模式** 作为数据访问层，每个领域实体对应一个 Repository 类。
@@ -17,7 +17,7 @@ v1.0 中，服务层直接操作内存字典，数据访问与业务逻辑高度
 
 | 方案 | 优点 | 缺点 | 结论 |
 |------|------|------|------|
-| **Repository 模式** | 解耦业务与数据访问；易测试；面试经典设计模式 | 增加类数量；小项目中可能显得过度设计 | ✅ 选中（教育目的） |
+| **Repository 模式** | 解耦业务与数据访问；易测试；设计复核经典设计模式 | 增加类数量；小项目中可能显得过度设计 | ✅ 选中（教育目的） |
 | 直接在 Service 中使用 Session | 代码量少；直观 | 业务与数据耦合；难以测试；SQLAlchemy 泄漏到上层 | ❌ 不满足分层要求 |
 | Active Record | 简单；类似 Rails/Django ORM 默认模式 | 模型承担过多职责；难以 mock；不适合复杂查询 | ❌ 职责过重 |
 | DAO (Data Access Object) | 与 Repository 类似，但偏底层 | 在 Python 社区中 Repository 更常见；概念差异细微 | ❌ 与 Repository 本质类似 |
@@ -77,7 +77,7 @@ backend/repositories/
 1. 每个实体的查询模式差异很大（订单需要 `selectinload`，商品不需要）
 2. 通用接口会隐藏业务语义（`get_by_id` 和 `get_order_with_bids` 的意图不同）
 3. Python 的类型泛型在实践中有诸多限制
-4. 面试中，展示"手写 Repository"比"使用框架"更能体现对架构的理解
+4. 显式 Repository 方法能保留实体特有查询和加载策略，避免通用基类隐藏行为
 
 ### 事务边界在 Service 层
 ```python
@@ -109,17 +109,17 @@ async def _persist_order(self, order_orm, item_orms, decision_orms, bid_orms, ..
 
 | 风险 | 缓解措施 |
 |------|----------|
-| Repository 层代码重复（每个 repo 都有类似的 CRUD） | 接受适度重复；面试中解释"显式优于隐式" |
+| Repository 层代码重复（每个 repo 都有类似的 CRUD） | 接受适度重复；设计复核中解释"显式优于隐式" |
 | 过度抽象导致性能问题 | Repository 直接暴露 SQLAlchemy 的 `select()` 能力，不做额外封装 |
-| 初学者理解困难 | 配合文档和面试 Q&A 解释分层意图 |
+| 初学者理解困难 | 配合文档和设计复核 Q&A 解释分层意图 |
 
-## 面试要点
+## 设计复核要点
 
 ### Q1: 什么是 Repository 模式？为什么不用直接在 Service 里写 SQL？
 > "Repository 模式是领域驱动设计中的模式，将数据访问逻辑封装成独立的类。Service 层只调用 `order_repo.get_by_id()`，不关心数据从哪里来。这样我们未来可以从 PostgreSQL 切换到 MongoDB 时，只需要重写 Repository 实现，Service 层完全不受影响。"
 
 ### Q2: 你们为什么不写 BaseRepository 泛型基类？
-> "我们考虑过，但发现每个实体的查询模式差异很大。比如 Order 需要 `selectinload(items, decisions, bids)`，而 Product 只需要简单查询。泛型基类会隐藏这些差异，导致过度抽象。在 Python 中，显式写出每个 Repository 的方法更清晰，也更容易在面试中解释。"
+> "我们考虑过，但发现每个实体的查询模式差异很大。比如 Order 需要 `selectinload(items, decisions, bids)`，而 Product 只需要简单查询。泛型基类会隐藏这些差异，导致过度抽象。在 Python 中，显式写出每个 Repository 的方法更清晰，也更容易在设计复核中解释。"
 
 ### Q3: 事务边界在哪里？为什么？
 > "在 Service 层。一个订单的创建涉及多个表（orders, order_items, agent_decisions, warehouse_bids, products），这些操作必须在同一个事务中。如果 Service 层让每个 Repository 自己 commit，就可能在中间步骤失败时留下不一致的数据。所以我们在 Service 中打开 Session，所有 Repository 共享同一个 Session，最后统一 commit。"

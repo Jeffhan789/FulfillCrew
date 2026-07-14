@@ -20,7 +20,7 @@ Design Decisions:
     - cascade="all, delete-orphan": Deleting an order cascades to items/decisions/bids
     - server_default=func.now(): Database-level timestamp generation (not Python)
 
-Interview Note:
+Engineering Note:
     Q: Why SQLAlchemy 2.0 instead of raw SQL or Django ORM?
     A: SQLAlchemy 2.0 is the most flexible Python ORM. It supports async
        (asyncpg), complex queries, and works with any framework. Django ORM
