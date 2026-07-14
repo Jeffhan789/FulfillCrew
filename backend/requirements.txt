@@ -17,7 +17,7 @@ structlog==24.4.0
 prometheus-client==0.21.1
 
 # ML / Data Science
-numpy==2.2.0
+numpy==2.5.1
 pandas==2.2.3
 scikit-learn==1.6.1
 
